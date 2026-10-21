@@ -255,6 +255,17 @@ class MemoryRepository implements ShopRepository {
     }
   }
 
+  String? _storeWhatsApp;
+
+  @override
+  Future<String?> fetchStoreWhatsApp() async => _storeWhatsApp;
+
+  @override
+  Future<void> adminSaveStoreWhatsApp(String number) async {
+    await _wait();
+    _storeWhatsApp = number;
+  }
+
   @override
   Future<void> adminSetShipping(String orderId, String courier, String trackingNumber) async {
     await _wait();

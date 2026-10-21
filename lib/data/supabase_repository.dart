@@ -266,6 +266,17 @@ class SupabaseRepository implements ShopRepository {
   }
 
   @override
+  Future<String?> fetchStoreWhatsApp() async {
+    final row = await _db.from('pengaturan_toko').select('no_wa').eq('id', 1).maybeSingle();
+    return row?['no_wa'] as String?;
+  }
+
+  @override
+  Future<void> adminSaveStoreWhatsApp(String number) async {
+    await _db.from('pengaturan_toko').upsert({'id': 1, 'no_wa': number});
+  }
+
+  @override
   Future<void> adminSetShipping(String orderId, String courier, String trackingNumber) async {
     await _db
         .from('pesanan')

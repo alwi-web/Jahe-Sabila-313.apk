@@ -333,3 +333,16 @@ join (values
 -- Menjadikan akun tertentu admin (jalankan setelah akun itu mendaftar):
 -- update public.profiles set role = 'admin'
 -- where id = (select id from auth.users where email = 'email-admin@contoh.com');
+
+-- ---------- Pengaturan toko ----------
+-- Satu baris (id = 1). Semua orang boleh membaca nomor WhatsApp toko, hanya admin yang boleh mengubah.
+create table if not exists public.pengaturan_toko (
+  id integer primary key default 1 check (id = 1),
+  no_wa text not null
+);
+alter table public.pengaturan_toko enable row level security;
+create policy "semua boleh lihat pengaturan toko" on public.pengaturan_toko
+  for select using (true);
+create policy "admin ubah pengaturan toko" on public.pengaturan_toko
+  for all using (public.is_admin()) with check (public.is_admin());
+insert into public.pengaturan_toko (id, no_wa) values (1, '6288808425275') on conflict (id) do nothing;

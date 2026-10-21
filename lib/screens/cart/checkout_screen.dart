@@ -38,7 +38,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       setState(() => _busy = false);
       return;
     }
-    final opened = await openWhatsApp(buildOrderMessage(order!, state.profile));
+    final opened = await openWhatsApp(state.storeWhatsApp, buildOrderMessage(order!, state.profile));
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => OrderSuccessScreen(order: order!, whatsAppOpened: opened)),
