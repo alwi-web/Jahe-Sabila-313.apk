@@ -35,6 +35,10 @@ jobs:
         run: flutter create . --platforms=android --org com.sabila313 --project-name sabila313
       - name: Atur AndroidManifest
         run: python3 .github/scripts/patch_android_manifest.py android/app/src/main/AndroidManifest.xml
+      - name: Matikan R8 (pengecil kode)
+        # R8 merusak plugin shared_preferences di APK rilis (NoSuchMethodError
+        # SharedPreferencesApiRegistrar.getAll), sehingga Supabase gagal dimulai.
+        run: printf '\nshrink=false\n' >> android/gradle.properties
       - name: Pasang ikon aplikasi
         run: cp -r .github/launcher/. android/app/src/main/res/
       - run: flutter pub get
