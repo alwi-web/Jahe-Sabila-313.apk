@@ -35,17 +35,3 @@ Future<bool> openWhatsApp(String message) async {
   return launchUrl(uri, mode: LaunchMode.externalApplication);
 }
 
-/// Pesan admin ke pembeli: total pesanan, rekening toko, dan permintaan bukti transfer.
-String buildPaymentMessage(Order order) {
-  final b = StringBuffer()
-    ..writeln('Halo ${order.buyerName.isEmpty ? 'Kak' : order.buyerName}, terima kasih sudah memesan di Jahe Merah Sabila 313.')
-    ..writeln()
-    ..writeln('Pesanan #${order.number}')
-    ..writeln('Total: ${rupiah(order.total)}')
-    ..writeln()
-    ..writeln('Silakan transfer ke:')
-    ..writeln(rekeningToko)
-    ..writeln()
-    ..write('Setelah transfer, mohon kirim foto bukti transfer di chat ini ya. Pesanan akan kami proses setelah pembayaran dicek.');
-  return b.toString();
-}
