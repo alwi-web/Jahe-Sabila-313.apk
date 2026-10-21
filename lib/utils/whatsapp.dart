@@ -19,9 +19,13 @@ String buildAdminOrderMessage(Order order) {
   final b = StringBuffer()
     ..writeln('Halo ${order.buyerName.isEmpty ? 'Kak' : order.buyerName}, berikut pesanan Anda di Jahe Merah Sabila 313:');
   _writeOrderDetails(b, order, order.buyerName, order.buyerPhone);
-  b
-    ..writeln()
-    ..write('Status pesanan: ${order.status.label}');
+  b.writeln();
+  if (order.hasTracking) {
+    b
+      ..writeln('Kurir: ${order.courier}')
+      ..writeln('No. resi: ${order.trackingNumber}');
+  }
+  b.write('Status pesanan: ${order.status.label}');
   return b.toString();
 }
 

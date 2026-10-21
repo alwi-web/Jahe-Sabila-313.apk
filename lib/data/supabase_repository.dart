@@ -14,7 +14,7 @@ class SupabaseRepository implements ShopRepository {
   }
 
   static const _orderColumns =
-      'id, tanggal, total, alamat_kirim, status, detail_pesanan(id, jumlah, harga_satuan, nama_produk, ukuran, varian_produk(produk_id))';
+      'id, tanggal, total, alamat_kirim, status, kurir, no_resi, detail_pesanan(id, jumlah, harga_satuan, nama_produk, ukuran, varian_produk(produk_id))';
 
   // ---------------- Akun ----------------
 
@@ -209,6 +209,8 @@ class SupabaseRepository implements ShopRepository {
       total: r['total'] as int,
       addressText: r['alamat_kirim'] as String,
       status: OrderStatus.fromCode(r['status'] as String),
+      courier: (r['kurir'] as String?) ?? '',
+      trackingNumber: (r['no_resi'] as String?) ?? '',
       lines: lines,
       buyerName: buyerName,
       buyerPhone: buyerPhone,
@@ -261,6 +263,14 @@ class SupabaseRepository implements ShopRepository {
   Future<void> adminSetOrderStatus(String orderId, OrderStatus status) async {
     // Fungsi database ini juga mengembalikan stok kalau pesanan dibatalkan.
     await _db.rpc('ubah_status_pesanan', params: {'p_id': int.parse(orderId), 'p_status': status.code});
+  }
+
+  @override
+  Future<void> adminSetShipping(String orderId, String courier, String trackingNumber) async {
+    await _db
+        .from('pesanan')
+        .update({'kurir': courier.isEmpty ? null : courier, 'no_resi': trackingNumber.isEmpty ? null : trackingNumber})
+        .eq('id', int.parse(orderId));
   }
 
   @override

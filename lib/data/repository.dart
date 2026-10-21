@@ -62,6 +62,9 @@ abstract class ShopRepository {
   Future<List<Order>> adminFetchOrders();
   Future<void> adminSetOrderStatus(String orderId, OrderStatus status);
 
+  /// Menyimpan kurir dan nomor resi pengiriman pesanan.
+  Future<void> adminSetShipping(String orderId, String courier, String trackingNumber);
+
   /// Menyimpan produk baru atau perubahan, termasuk harga dan stok tiap ukuran.
   Future<void> adminSaveProduct(ProductDraft draft);
 

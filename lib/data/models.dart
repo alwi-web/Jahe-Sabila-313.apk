@@ -128,6 +128,8 @@ class Order {
     this.status = OrderStatus.waitingPayment,
     this.buyerName = '',
     this.buyerPhone = '',
+    this.courier = '',
+    this.trackingNumber = '',
   });
 
   /// Diisi untuk tampilan admin.
@@ -142,6 +144,11 @@ class Order {
   final String addressText;
   final int total;
   OrderStatus status;
+
+  /// Kurir pengiriman (JNE / J&T) dan nomor resinya, diisi admin.
+  String courier;
+  String trackingNumber;
+  bool get hasTracking => trackingNumber.isNotEmpty;
 
   String get number => id.padLeft(3, '0');
   int get itemCount => lines.fold(0, (sum, l) => sum + l.qty);

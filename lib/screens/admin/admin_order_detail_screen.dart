@@ -21,8 +21,37 @@ class AdminOrderDetailScreen extends StatefulWidget {
 
 class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
   bool _busy = false;
+  late String _courier = widget.order.courier;
+  late final _resi = TextEditingController(text: widget.order.trackingNumber);
 
   Order get o => widget.order;
+
+  static const _couriers = ['JNE', 'J&T'];
+
+  @override
+  void dispose() {
+    _resi.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveShipping() async {
+    final resi = _resi.text.trim();
+    if (resi.isNotEmpty && _courier.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih kurir dulu')));
+      return;
+    }
+    if (_busy) return;
+    setState(() => _busy = true);
+    final ok = await runGuarded(context, () => context.read<AppState>().setShipping(o, resi.isEmpty ? '' : _courier, resi));
+    if (!mounted) return;
+    setState(() => _busy = false);
+    if (ok) {
+      FocusScope.of(context).unfocus();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(resi.isEmpty ? 'Resi dihapus' : 'Resi $_courier $resi disimpan')),
+      );
+    }
+  }
 
   Future<void> _setStatus(OrderStatus status) async {
     if (status == o.status || _busy) return;
@@ -131,6 +160,38 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
                 ),
                 Text(rupiah(o.total), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               ]),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          AppCard(
+            padding: const EdgeInsets.all(14),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              const Text('Pengiriman', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              Row(children: [
+                for (final c in _couriers) ...[
+                  Expanded(
+                    child: SelectPill(label: c, selected: _courier == c, onTap: () => setState(() => _courier = c)),
+                  ),
+                  if (c != _couriers.last) const SizedBox(width: 8),
+                ],
+              ]),
+              const SizedBox(height: 12),
+              LabeledField(
+                label: 'Nomor resi',
+                controller: _resi,
+                hint: 'Contoh: JP1234567890',
+                textInputAction: TextInputAction.done,
+              ),
+              const SizedBox(height: 12),
+              FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(44)),
+                onPressed: _busy ? null : _saveShipping,
+                child: const Text('Simpan resi'),
+              ),
+              const SizedBox(height: 6),
+              const Text('Setelah disimpan, resi tampil di riwayat pesanan pembeli dan ikut di pesan WhatsApp.',
+                  style: TextStyle(fontSize: 13, color: AppColors.muted, height: 1.4)),
             ]),
           ),
           const SizedBox(height: 20),

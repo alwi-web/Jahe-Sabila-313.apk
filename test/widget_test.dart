@@ -110,6 +110,9 @@ void main() {
     expect(admin.countByStatus(OrderStatus.waitingPayment), 1);
     await admin.setOrderStatus(admin.adminOrders.first, OrderStatus.processing);
     expect(admin.countByStatus(OrderStatus.processing), 1);
+    await admin.setShipping(admin.adminOrders.first, 'J&T', 'JT0012345');
+    expect((await repo.fetchOrders()).first.trackingNumber, 'JT0012345');
+    expect(admin.adminOrders.first.courier, 'J&T');
 
     await admin.saveProduct(ProductDraft(
       name: 'Jahe Merah dengan Madu',
@@ -161,6 +164,14 @@ void main() {
     expect(admin, contains('No. HP: 0812'));
     expect(admin, contains('Jl. Melati 1, Bogor 16111'));
     expect(admin, endsWith('Status pesanan: Diproses'));
+    expect(admin, isNot(contains('No. resi')));
+
+    order
+      ..courier = 'JNE'
+      ..trackingNumber = 'JP1234567890';
+    final dikirim = buildAdminOrderMessage(order);
+    expect(dikirim, contains('Kurir: JNE'));
+    expect(dikirim, contains('No. resi: JP1234567890'));
 
   });
 }
