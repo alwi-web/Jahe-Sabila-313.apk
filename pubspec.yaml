@@ -1,0 +1,29 @@
+name: sabila313
+description: Aplikasi pembeli Jahe Merah Sabila 313.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  url_launcher: ^6.3.0
+  google_fonts: ^6.2.1
+  supabase_flutter: ^2.8.0
+  pdf: ^3.11.1
+  printing: ^5.13.4
+  excel: ^4.0.6
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
