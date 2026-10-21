@@ -1,0 +1,17 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+.idea/
+.vscode/
+.metadata
+pubspec.lock
+
+# Folder platform dibuat di CI dengan `flutter create`
+android/
+ios/
