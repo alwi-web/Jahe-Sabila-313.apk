@@ -1,6 +1,5 @@
 import 'package:url_launcher/url_launcher.dart';
 
-import '../config.dart';
 import '../data/models.dart';
 import 'format.dart';
 
@@ -48,10 +47,18 @@ void _writeOrderDetails(StringBuffer b, Order order, String name, String phone) 
     ..writeln(order.addressText);
 }
 
-/// Membuka WhatsApp ke nomor penjual dengan pesan yang sudah terisi.
+/// 0812-3456 / +62 812 3456 / 812... → 628123456 (format wa.me).
+String normalizeWhatsAppNumber(String input) {
+  final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.startsWith('0')) return '62${digits.substring(1)}';
+  if (digits.startsWith('8')) return '62$digits';
+  return digits;
+}
+
+/// Membuka WhatsApp ke nomor toko [number] dengan pesan yang sudah terisi.
 /// Mengembalikan false kalau WhatsApp atau browser tidak bisa dibuka.
-Future<bool> openWhatsApp(String message) async {
-  final uri = Uri.https('wa.me', '/$sellerWhatsApp', {'text': message});
+Future<bool> openWhatsApp(String number, String message) async {
+  final uri = Uri.https('wa.me', '/$number', {'text': message});
   return launchUrl(uri, mode: LaunchMode.externalApplication);
 }
 

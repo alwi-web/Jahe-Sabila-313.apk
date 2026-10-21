@@ -62,6 +62,10 @@ abstract class ShopRepository {
   Future<List<Order>> adminFetchOrders();
   Future<void> adminSetOrderStatus(String orderId, OrderStatus status);
 
+  /// Nomor WhatsApp toko (format 62...) dari pengaturan toko; null kalau belum diatur.
+  Future<String?> fetchStoreWhatsApp();
+  Future<void> adminSaveStoreWhatsApp(String number);
+
   /// Menyimpan kurir dan nomor resi pengiriman pesanan.
   Future<void> adminSetShipping(String orderId, String courier, String trackingNumber);
 

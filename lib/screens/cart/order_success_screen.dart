@@ -44,7 +44,7 @@ class OrderSuccessScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 FilledButton.icon(
                   style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp),
-                  onPressed: () => openWhatsApp(buildOrderMessage(order, state.profile)),
+                  onPressed: () => openWhatsApp(state.storeWhatsApp, buildOrderMessage(order, state.profile)),
                   icon: const Icon(Icons.chat_outlined),
                   label: const Text('Buka WhatsApp'),
                 ),

@@ -160,7 +160,7 @@ class _OrderCard extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton.icon(
             style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, minimumSize: const Size.fromHeight(44)),
-            onPressed: () => openWhatsApp(buildOrderMessage(order, state.profile)),
+            onPressed: () => openWhatsApp(state.storeWhatsApp, buildOrderMessage(order, state.profile)),
             icon: const Icon(Icons.chat_outlined, size: 18),
             label: const Text('Konfirmasi via WhatsApp', style: TextStyle(fontSize: 14)),
           ),

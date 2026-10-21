@@ -174,4 +174,21 @@ void main() {
     expect(dikirim, contains('No. resi: JP1234567890'));
 
   });
+
+  test('pengaturan toko: nomor WhatsApp dinormalisasi dan disimpan', () async {
+    expect(normalizeWhatsAppNumber('0812-3456-7890'), '6281234567890');
+    expect(normalizeWhatsAppNumber('+62 812 3456 7890'), '6281234567890');
+    expect(normalizeWhatsAppNumber('81234567890'), '6281234567890');
+
+    final repo = MemoryRepository(latency: Duration.zero);
+    final admin = AppState(repo);
+    await admin.signIn('admin@sabila313.com', 'admin12345');
+    await admin.saveStoreWhatsApp('0899 1111 2222');
+    expect(admin.storeWhatsApp, '6289911112222');
+
+    // Pembeli yang masuk setelahnya memakai nomor baru.
+    final buyer = AppState(repo);
+    await buyer.signUp(name: 'Sari', email: 'sari@contoh.com', phone: '0815', password: 'rahasia123');
+    expect(buyer.storeWhatsApp, '6289911112222');
+  });
 }

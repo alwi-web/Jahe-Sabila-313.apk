@@ -9,6 +9,7 @@ import '../../widgets/common.dart';
 import '../auth/login_screen.dart';
 import 'admin_order_detail_screen.dart';
 import 'admin_shell.dart';
+import 'store_settings_screen.dart';
 
 /// Batas stok yang dianggap menipis.
 const lowStockLimit = 5;
@@ -48,6 +49,13 @@ class AdminDashboardScreen extends StatelessWidget {
         titleSpacing: 20,
         title: const Text('Beranda', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
         actions: [
+          IconButton(
+            tooltip: 'Pengaturan toko',
+            style: IconButton.styleFrom(backgroundColor: AppColors.cream),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const StoreSettingsScreen())),
+            icon: const Icon(Icons.settings_outlined, color: AppColors.brand),
+          ),
+          const SizedBox(width: 8),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: IconButton(

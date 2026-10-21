@@ -81,15 +81,8 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
     if (yes == true) await _setStatus(OrderStatus.cancelled);
   }
 
-  /// 08xxx → 628xxx untuk link wa.me.
-  String _waNumber(String phone) {
-    final digits = phone.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digits.startsWith('0')) return '62${digits.substring(1)}';
-    return digits;
-  }
-
   Future<void> _contact() async {
-    final number = _waNumber(o.buyerPhone);
+    final number = normalizeWhatsAppNumber(o.buyerPhone);
     final uri = Uri.https('wa.me', number.isEmpty ? '/' : '/$number', {'text': buildAdminOrderMessage(o)});
     final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && mounted) {

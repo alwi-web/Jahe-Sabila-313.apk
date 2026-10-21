@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+import '../config.dart';
 import '../utils/errors.dart';
+import '../utils/whatsapp.dart';
 import 'models.dart';
 import 'repository.dart';
 
@@ -36,6 +38,7 @@ class AppState extends ChangeNotifier {
   /// Memuat data sesuai peran setelah login.
   Future<void> _afterLogin() async {
     role = await repo.fetchRole();
+    await loadStoreSettings();
     if (isAdmin) {
       adminTab = 0;
       await loadProducts();
@@ -352,6 +355,29 @@ class AppState extends ChangeNotifier {
     notifyListeners();
     // Pembatalan bisa mengubah stok.
     loadProducts().catchError((Object e) => _report(e));
+  }
+
+  // ---------------- Pengaturan toko ----------------
+  /// Nomor WhatsApp tujuan pesanan pembeli. Awalnya dari config.dart,
+  /// lalu diganti nilai di tabel pengaturan_toko kalau sudah diatur admin.
+  String storeWhatsApp = sellerWhatsApp;
+
+  Future<void> loadStoreSettings() async {
+    try {
+      final n = await repo.fetchStoreWhatsApp();
+      if (n != null && n.isNotEmpty) storeWhatsApp = n;
+    } catch (e) {
+      // Tabel belum dibuat (SQL belum dijalankan): tetap pakai nomor dari config.dart.
+      debugPrint('Pengaturan toko tidak terbaca: $e');
+    }
+  }
+
+  /// Menyimpan nomor WhatsApp toko; 08xx otomatis diubah menjadi 628xx.
+  Future<void> saveStoreWhatsApp(String input) async {
+    final number = normalizeWhatsAppNumber(input);
+    await repo.adminSaveStoreWhatsApp(number);
+    storeWhatsApp = number;
+    notifyListeners();
   }
 
   Future<void> setShipping(Order order, String courier, String trackingNumber) async {
