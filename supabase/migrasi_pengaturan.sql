@@ -16,4 +16,4 @@ drop policy if exists "admin ubah pengaturan toko" on public.pengaturan_toko;
 create policy "admin ubah pengaturan toko" on public.pengaturan_toko
   for all using (public.is_admin()) with check (public.is_admin());
 
-insert into public.pengaturan_toko (id, no_wa) values (1, '6288808425275') on conflict (id) do nothing;
+insert into public.pengaturan_toko (id, no_wa) values (1, '6281935131106') on conflict (id) do nothing;
