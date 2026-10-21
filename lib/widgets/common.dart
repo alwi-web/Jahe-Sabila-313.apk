@@ -330,24 +330,15 @@ class MainBadge extends StatelessWidget {
   }
 }
 
+/// Logo Jahe Merah Sabila 313 (latar transparan, jadi ikut warna latar layar).
 class BrandLogo extends StatelessWidget {
-  const BrandLogo({super.key});
+  const BrandLogo({super.key, this.height = 72});
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
-    return ExcludeSemantics(
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: AppColors.kraft,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.kraftEdge),
-        ),
-        alignment: Alignment.center,
-        child: const Text('S', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
-      ),
-    );
+    return Image.asset('assets/logo.png', height: height, semanticLabel: 'Logo Jahe Merah Sabila 313');
   }
 }
 

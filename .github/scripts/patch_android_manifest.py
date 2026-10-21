@@ -28,6 +28,9 @@ impeller = (
     '            android:name="io.flutter.embedding.android.EnableImpeller"\n'
     '            android:value="false" />\n'
 )
+# Nama aplikasi di layar HP.
+text = text.replace('android:label="sabila313"', 'android:label="Sabila 313"', 1)
+
 if "EnableImpeller" not in text:
     text = text.replace("</application>", impeller + "    </application>", 1)
 

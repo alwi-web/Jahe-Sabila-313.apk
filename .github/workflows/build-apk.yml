@@ -35,6 +35,8 @@ jobs:
         run: flutter create . --platforms=android --org com.sabila313 --project-name sabila313
       - name: Atur AndroidManifest
         run: python3 .github/scripts/patch_android_manifest.py android/app/src/main/AndroidManifest.xml
+      - name: Pasang ikon aplikasi
+        run: cp -r .github/launcher/. android/app/src/main/res/
       - run: flutter pub get
       - name: Build APK
         run: flutter build apk --release
