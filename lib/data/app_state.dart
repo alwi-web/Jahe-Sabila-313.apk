@@ -354,6 +354,13 @@ class AppState extends ChangeNotifier {
     loadProducts().catchError((Object e) => _report(e));
   }
 
+  Future<void> setShipping(Order order, String courier, String trackingNumber) async {
+    await repo.adminSetShipping(order.id, courier, trackingNumber);
+    order.courier = courier;
+    order.trackingNumber = trackingNumber;
+    notifyListeners();
+  }
+
   Future<void> saveProduct(ProductDraft draft) async {
     await repo.adminSaveProduct(draft);
     await loadProducts();

@@ -93,7 +93,9 @@ create table public.pesanan (
   total integer not null,
   alamat_kirim text not null,                   -- salinan alamat saat checkout
   status text not null default 'menunggu'
-    check (status in ('menunggu', 'diproses', 'selesai', 'batal'))
+    check (status in ('menunggu', 'diproses', 'selesai', 'batal')),
+  kurir text check (kurir in ('JNE', 'J&T')),     -- diisi admin saat dikirim
+  no_resi text
 );
 
 create table public.detail_pesanan (

@@ -141,6 +141,21 @@ class _OrderCard extends StatelessWidget {
           ),
           Text(rupiah(order.total), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
         ]),
+        if (order.hasTracking) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: AppColors.cream, borderRadius: BorderRadius.circular(12)),
+            child: Row(children: [
+              const Icon(Icons.local_shipping_outlined, size: 20, color: AppColors.muted),
+              const SizedBox(width: 10),
+              Expanded(
+                child: SelectableText('${order.courier} · Resi ${order.trackingNumber}',
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              ),
+            ]),
+          ),
+        ],
         if (order.status == OrderStatus.waitingPayment) ...[
           const SizedBox(height: 12),
           FilledButton.icon(

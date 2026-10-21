@@ -255,6 +255,17 @@ class MemoryRepository implements ShopRepository {
     }
   }
 
+  @override
+  Future<void> adminSetShipping(String orderId, String courier, String trackingNumber) async {
+    await _wait();
+    for (final o in _orders) {
+      if (o.id == orderId) {
+        o.courier = courier;
+        o.trackingNumber = trackingNumber;
+      }
+    }
+  }
+
   int _nextProductId = 4;
 
   @override

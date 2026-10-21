@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../config.dart';
 import '../../data/app_state.dart';
 import '../../data/models.dart';
 import '../../theme.dart';
@@ -22,8 +21,37 @@ class AdminOrderDetailScreen extends StatefulWidget {
 
 class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
   bool _busy = false;
+  late String _courier = widget.order.courier;
+  late final _resi = TextEditingController(text: widget.order.trackingNumber);
 
   Order get o => widget.order;
+
+  static const _couriers = ['JNE', 'J&T'];
+
+  @override
+  void dispose() {
+    _resi.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveShipping() async {
+    final resi = _resi.text.trim();
+    if (resi.isNotEmpty && _courier.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih kurir dulu')));
+      return;
+    }
+    if (_busy) return;
+    setState(() => _busy = true);
+    final ok = await runGuarded(context, () => context.read<AppState>().setShipping(o, resi.isEmpty ? '' : _courier, resi));
+    if (!mounted) return;
+    setState(() => _busy = false);
+    if (ok) {
+      FocusScope.of(context).unfocus();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(resi.isEmpty ? 'Resi dihapus' : 'Resi $_courier $resi disimpan')),
+      );
+    }
+  }
 
   Future<void> _setStatus(OrderStatus status) async {
     if (status == o.status || _busy) return;
@@ -60,25 +88,13 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
     return digits;
   }
 
-  Future<void> _contact([String? message]) async {
+  Future<void> _contact() async {
     final number = _waNumber(o.buyerPhone);
-    final text = message ?? 'Halo ${o.buyerName}, terkait pesanan #${o.number} di Jahe Merah Sabila 313.';
-    final uri = Uri.https('wa.me', number.isEmpty ? '/' : '/$number', {'text': text});
+    final uri = Uri.https('wa.me', number.isEmpty ? '/' : '/$number', {'text': buildAdminOrderMessage(o)});
     final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('WhatsApp tidak bisa dibuka')));
     }
-  }
-
-  /// Mengirim total dan rekening toko ke pembeli, sekaligus meminta bukti transfer.
-  Future<void> _sendPaymentInfo() async {
-    if (rekeningToko.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Rekening toko belum diisi (rekeningToko di config.dart)')),
-      );
-      return;
-    }
-    await _contact(buildPaymentMessage(o));
   }
 
   @override
@@ -112,19 +128,6 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
                 icon: const Icon(Icons.chat_outlined, size: 18),
                 label: const Text('Hubungi via WhatsApp', style: TextStyle(fontSize: 14)),
               ),
-              if (o.status == OrderStatus.waitingPayment) ...[
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.whatsapp,
-                    side: const BorderSide(color: AppColors.whatsapp),
-                    minimumSize: const Size.fromHeight(44),
-                  ),
-                  onPressed: _sendPaymentInfo,
-                  icon: const Icon(Icons.account_balance_outlined, size: 18),
-                  label: const Text('Kirim info rekening', style: TextStyle(fontSize: 14)),
-                ),
-              ],
             ]),
           ),
           const SizedBox(height: 16),
@@ -157,6 +160,38 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
                 ),
                 Text(rupiah(o.total), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               ]),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          AppCard(
+            padding: const EdgeInsets.all(14),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              const Text('Pengiriman', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              Row(children: [
+                for (final c in _couriers) ...[
+                  Expanded(
+                    child: SelectPill(label: c, selected: _courier == c, onTap: () => setState(() => _courier = c)),
+                  ),
+                  if (c != _couriers.last) const SizedBox(width: 8),
+                ],
+              ]),
+              const SizedBox(height: 12),
+              LabeledField(
+                label: 'Nomor resi',
+                controller: _resi,
+                hint: 'Contoh: JP1234567890',
+                textInputAction: TextInputAction.done,
+              ),
+              const SizedBox(height: 12),
+              FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(44)),
+                onPressed: _busy ? null : _saveShipping,
+                child: const Text('Simpan resi'),
+              ),
+              const SizedBox(height: 6),
+              const Text('Setelah disimpan, resi tampil di riwayat pesanan pembeli dan ikut di pesan WhatsApp.',
+                  style: TextStyle(fontSize: 13, color: AppColors.muted, height: 1.4)),
             ]),
           ),
           const SizedBox(height: 20),
