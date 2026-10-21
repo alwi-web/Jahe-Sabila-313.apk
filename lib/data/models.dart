@@ -130,7 +130,12 @@ class Order {
     this.buyerPhone = '',
     this.courier = '',
     this.trackingNumber = '',
+    this.updatedAt,
+    this.readAt,
   });
+
+  /// Batas waktu bayar; lewat dari ini pesanan Menunggu bayar dibatalkan otomatis.
+  static const paymentWindow = Duration(hours: 3);
 
   /// Diisi untuk tampilan admin.
   final String buyerName;
@@ -149,6 +154,13 @@ class Order {
   String courier;
   String trackingNumber;
   bool get hasTracking => trackingNumber.isNotEmpty;
+
+  /// Kapan status/resi terakhir diubah, dan kapan pembeli terakhir membuka riwayat pesanan.
+  DateTime? updatedAt;
+  DateTime? readAt;
+  bool get hasUnreadUpdate => updatedAt != null && (readAt == null || updatedAt!.isAfter(readAt!));
+
+  DateTime get payBefore => date.add(paymentWindow);
 
   String get number => id.padLeft(3, '0');
   int get itemCount => lines.fold(0, (sum, l) => sum + l.qty);

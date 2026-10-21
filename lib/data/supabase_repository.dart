@@ -14,7 +14,7 @@ class SupabaseRepository implements ShopRepository {
   }
 
   static const _orderColumns =
-      'id, tanggal, total, alamat_kirim, status, kurir, no_resi, detail_pesanan(id, jumlah, harga_satuan, nama_produk, ukuran, varian_produk(produk_id))';
+      'id, tanggal, total, alamat_kirim, status, kurir, no_resi, diperbarui, dibaca_pembeli, detail_pesanan(id, jumlah, harga_satuan, nama_produk, ukuran, varian_produk(produk_id))';
 
   // ---------------- Akun ----------------
 
@@ -211,10 +211,24 @@ class SupabaseRepository implements ShopRepository {
       status: OrderStatus.fromCode(r['status'] as String),
       courier: (r['kurir'] as String?) ?? '',
       trackingNumber: (r['no_resi'] as String?) ?? '',
+      updatedAt: _time(r['diperbarui']),
+      readAt: _time(r['dibaca_pembeli']),
       lines: lines,
       buyerName: buyerName,
       buyerPhone: buyerPhone,
     );
+  }
+
+  static DateTime? _time(Object? v) => v == null ? null : DateTime.parse(v as String).toLocal();
+
+  @override
+  Future<void> expireUnpaidOrders() async {
+    await _db.rpc('batalkan_pesanan_kedaluwarsa');
+  }
+
+  @override
+  Future<void> markOrdersRead() async {
+    await _db.rpc('tandai_pesanan_dibaca');
   }
 
   @override

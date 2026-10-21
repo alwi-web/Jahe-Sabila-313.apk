@@ -206,6 +206,25 @@ class MemoryRepository implements ShopRepository {
   Future<List<Order>> fetchOrders() async => List.of(_orders);
 
   @override
+  Future<void> expireUnpaidOrders() async {
+    final now = DateTime.now();
+    for (final o in _orders) {
+      if (o.status == OrderStatus.waitingPayment && now.isAfter(o.payBefore)) {
+        o.status = OrderStatus.cancelled;
+        o.updatedAt = now;
+      }
+    }
+  }
+
+  @override
+  Future<void> markOrdersRead() async {
+    final now = DateTime.now();
+    for (final o in _orders) {
+      if (o.updatedAt != null) o.readAt = now;
+    }
+  }
+
+  @override
   Future<Order> placeOrder(String addressId) async {
     await _wait();
     final ai = _addresses.indexWhere((a) => a.id == addressId);
@@ -251,7 +270,10 @@ class MemoryRepository implements ShopRepository {
   Future<void> adminSetOrderStatus(String orderId, OrderStatus status) async {
     await _wait();
     for (final o in _orders) {
-      if (o.id == orderId) o.status = status;
+      if (o.id == orderId) {
+        o.status = status;
+        o.updatedAt = DateTime.now();
+      }
     }
   }
 
@@ -273,6 +295,7 @@ class MemoryRepository implements ShopRepository {
       if (o.id == orderId) {
         o.courier = courier;
         o.trackingNumber = trackingNumber;
+        o.updatedAt = DateTime.now();
       }
     }
   }

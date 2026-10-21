@@ -54,6 +54,12 @@ abstract class ShopRepository {
   /// Membuat pesanan dari isi keranjang dan mengosongkan keranjang.
   Future<Order> placeOrder(String addressId);
 
+  /// Membatalkan pesanan Menunggu bayar yang lewat 3 jam (stok dikembalikan).
+  Future<void> expireUnpaidOrders();
+
+  /// Pembeli sudah melihat perubahan status/resi pesanannya.
+  Future<void> markOrdersRead();
+
   // ---------------- Admin ----------------
   /// 'admin' atau 'pembeli' (kolom profiles.role).
   Future<String> fetchRole();

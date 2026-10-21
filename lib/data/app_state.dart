@@ -224,6 +224,7 @@ class AppState extends ChangeNotifier {
     loadingOrders = true;
     notifyListeners();
     try {
+      await _expireUnpaidOrders();
       _orders = await repo.fetchOrders();
     } finally {
       loadingOrders = false;
@@ -340,11 +341,36 @@ class AppState extends ChangeNotifier {
     loadingAdminOrders = true;
     notifyListeners();
     try {
+      await _expireUnpaidOrders();
       adminOrders = await repo.adminFetchOrders();
     } finally {
       loadingAdminOrders = false;
       notifyListeners();
     }
+  }
+
+  /// Cadangan untuk jadwal otomatis di database: batalkan pesanan yang lewat batas bayar.
+  Future<void> _expireUnpaidOrders() async {
+    try {
+      await repo.expireUnpaidOrders();
+    } catch (e) {
+      // Fungsi belum dibuat (SQL belum dijalankan): pesanan tetap dimuat.
+      debugPrint('Batal otomatis tidak berjalan: $e');
+    }
+  }
+
+  /// Jumlah pesanan pembeli yang status/resinya berubah sejak terakhir dilihat.
+  int get unreadOrderUpdates => _orders.where((o) => o.hasUnreadUpdate).length;
+
+  /// Dipanggil saat pembeli membuka Riwayat pesanan.
+  Future<void> markOrdersRead() async {
+    if (unreadOrderUpdates == 0) return;
+    await repo.markOrdersRead();
+    final now = DateTime.now();
+    for (final o in _orders) {
+      if (o.updatedAt != null) o.readAt = now;
+    }
+    notifyListeners();
   }
 
   int countByStatus(OrderStatus s) => adminOrders.where((o) => o.status == s).length;
