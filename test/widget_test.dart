@@ -132,7 +132,7 @@ void main() {
     expect(admin.products.length, 3);
   });
 
-  test('pesan WhatsApp checkout berisi nama, no. HP, alamat, dan jumlah', () {
+  test('pesan WhatsApp pembeli dan admin berisi nama, no. HP, alamat, jumlah, dan status', () {
     final order = Order(
       id: '7',
       date: DateTime(2026, 10, 21),
@@ -153,6 +153,14 @@ void main() {
     expect(pesan, contains('Nama: Alwi'));
     expect(pesan, contains('No. HP: 0812'));
     expect(pesan, contains('Jl. Melati 1, Bogor 16111'));
+
+    order.status = OrderStatus.processing;
+    final admin = buildAdminOrderMessage(order);
+    expect(admin, startsWith('Halo Alwi, berikut pesanan Anda'));
+    expect(admin, contains('x2 = Rp 96.000'));
+    expect(admin, contains('No. HP: 0812'));
+    expect(admin, contains('Jl. Melati 1, Bogor 16111'));
+    expect(admin, endsWith('Status pesanan: Diproses'));
 
   });
 }

@@ -6,6 +6,7 @@ import '../../data/app_state.dart';
 import '../../data/models.dart';
 import '../../theme.dart';
 import '../../utils/format.dart';
+import '../../utils/whatsapp.dart';
 import '../../widgets/common.dart';
 import 'admin_shell.dart';
 
@@ -60,8 +61,7 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
 
   Future<void> _contact() async {
     final number = _waNumber(o.buyerPhone);
-    final text = 'Halo ${o.buyerName}, terkait pesanan #${o.number} di Jahe Merah Sabila 313.';
-    final uri = Uri.https('wa.me', number.isEmpty ? '/' : '/$number', {'text': text});
+    final uri = Uri.https('wa.me', number.isEmpty ? '/' : '/$number', {'text': buildAdminOrderMessage(o)});
     final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('WhatsApp tidak bisa dibuka')));
