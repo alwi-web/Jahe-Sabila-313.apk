@@ -18,12 +18,20 @@ class OrderHistoryScreen extends StatefulWidget {
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   OrderStatus? _filter; // null = Semua
 
+  /// Pesanan yang diperbarui admin sejak terakhir dilihat; ditandai "Diperbarui" selama layar ini terbuka.
+  final _fresh = <String>{};
+
   @override
   void initState() {
     super.initState();
-    // Muat ulang supaya status yang diubah admin langsung terlihat.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) runGuarded(context, context.read<AppState>().loadOrders);
+    // Muat ulang supaya status yang diubah admin langsung terlihat, lalu tandai sudah dibaca.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final state = context.read<AppState>();
+      await runGuarded(context, state.loadOrders);
+      if (!mounted) return;
+      setState(() => _fresh.addAll(state.orders.where((o) => o.hasUnreadUpdate).map((o) => o.id)));
+      await runGuarded(context, state.markOrdersRead);
     });
   }
 
@@ -70,7 +78,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                     itemCount: orders.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, i) => _OrderCard(order: orders[i]),
+                    itemBuilder: (context, i) => _OrderCard(order: orders[i], fresh: _fresh.contains(orders[i].id)),
                   ),
           ),
         ),
@@ -109,9 +117,10 @@ class _FilterChip extends StatelessWidget {
 }
 
 class _OrderCard extends StatelessWidget {
-  const _OrderCard({required this.order});
+  const _OrderCard({required this.order, this.fresh = false});
 
   final Order order;
+  final bool fresh;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +131,13 @@ class _OrderCard extends StatelessWidget {
         Row(children: [
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Pesanan #${order.number}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              Row(children: [
+                Text('Pesanan #${order.number}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                if (fresh) ...[
+                  const SizedBox(width: 8),
+                  const Badge(label: Text('Diperbarui'), backgroundColor: AppColors.brand),
+                ],
+              ]),
               Text(shortDate(order.date), style: const TextStyle(fontSize: 13, color: AppColors.muted)),
             ]),
           ),
@@ -158,6 +173,9 @@ class _OrderCard extends StatelessWidget {
         ],
         if (order.status == OrderStatus.waitingPayment) ...[
           const SizedBox(height: 12),
+          Text('Bayar sebelum ${dateTime(order.payBefore)}. Lewat dari itu pesanan dibatalkan otomatis.',
+              style: const TextStyle(fontSize: 13, color: AppColors.brand, height: 1.4)),
+          const SizedBox(height: 8),
           FilledButton.icon(
             style: FilledButton.styleFrom(backgroundColor: AppColors.whatsapp, minimumSize: const Size.fromHeight(44)),
             onPressed: () => openWhatsApp(state.storeWhatsApp, buildOrderMessage(order, state.profile)),

@@ -77,6 +77,7 @@ class ProfileScreen extends StatelessWidget {
                   onTap: () => _open(context, const AddressListScreen())),
               const Divider(indent: 14, endIndent: 14),
               _MenuTile(icon: Icons.shopping_bag_outlined, label: 'Riwayat pesanan',
+                  badge: context.watch<AppState>().unreadOrderUpdates,
                   onTap: () => _open(context, const OrderHistoryScreen())),
               const Divider(indent: 14, endIndent: 14),
               _MenuTile(icon: Icons.lock_outline, label: 'Ubah password',
@@ -100,11 +101,14 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _MenuTile extends StatelessWidget {
-  const _MenuTile({required this.icon, required this.label, required this.onTap});
+  const _MenuTile({required this.icon, required this.label, required this.onTap, this.badge = 0});
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+
+  /// Angka merah di kanan, misalnya jumlah pesanan yang baru diperbarui.
+  final int badge;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +122,10 @@ class _MenuTile extends StatelessWidget {
         child: Icon(icon, size: 18, color: AppColors.brown),
       ),
       title: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.muted),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+        if (badge > 0) Badge(label: Text('$badge'), backgroundColor: AppColors.brand),
+        const Icon(Icons.chevron_right, color: AppColors.muted),
+      ]),
     );
   }
 }

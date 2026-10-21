@@ -9,7 +9,8 @@ String buildOrderMessage(Order order, UserProfile buyer) {
   _writeOrderDetails(b, order, buyer.name, buyer.phone);
   b
     ..writeln()
-    ..write('Mohon info nomor rekening untuk pembayaran. Terima kasih.');
+    ..writeln('Mohon info nomor rekening untuk pembayaran. Terima kasih.')
+    ..write('Batas pembayaran: ${dateTime(order.payBefore)}');
   return b.toString();
 }
 

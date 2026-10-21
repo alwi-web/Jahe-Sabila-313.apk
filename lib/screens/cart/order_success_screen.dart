@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../data/app_state.dart';
 import '../../data/models.dart';
 import '../../theme.dart';
+import '../../utils/format.dart';
 import '../../utils/whatsapp.dart';
 import '../../widgets/common.dart';
 import '../account/order_history_screen.dart';
@@ -39,6 +40,12 @@ class OrderSuccessScreen extends StatelessWidget {
                     : 'WhatsApp belum terbuka. Tekan tombol di bawah untuk mengirim pesanan ke penjual.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 14, color: AppColors.muted, height: 1.5),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Bayar sebelum ${dateTime(order.payBefore)}, atau pesanan dibatalkan otomatis.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14, color: AppColors.brand, fontWeight: FontWeight.w600, height: 1.5),
               ),
               if (!whatsAppOpened) ...[
                 const SizedBox(height: 16),

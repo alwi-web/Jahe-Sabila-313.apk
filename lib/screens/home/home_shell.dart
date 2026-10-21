@@ -15,6 +15,7 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     final count = state.cartCount;
+    final updates = state.unreadOrderUpdates;
     return Scaffold(
       body: IndexedStack(
         index: state.tab,
@@ -46,9 +47,19 @@ class HomeShell extends StatelessWidget {
             ),
             label: 'Keranjang',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: AppColors.brand),
+          NavigationDestination(
+            icon: Badge(
+              isLabelVisible: updates > 0,
+              label: Text('$updates'),
+              backgroundColor: AppColors.brand,
+              child: const Icon(Icons.person_outline),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: updates > 0,
+              label: Text('$updates'),
+              backgroundColor: AppColors.brand,
+              child: const Icon(Icons.person, color: AppColors.brand),
+            ),
             label: 'Akun',
           ),
         ],

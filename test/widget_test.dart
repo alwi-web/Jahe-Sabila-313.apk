@@ -191,4 +191,40 @@ void main() {
     await buyer.signUp(name: 'Sari', email: 'sari@contoh.com', phone: '0815', password: 'rahasia123');
     expect(buyer.storeWhatsApp, '6289911112222');
   });
+
+  test('notif pembeli: pesanan yang diubah admin ditandai sampai riwayat dibuka', () async {
+    final repo = MemoryRepository(latency: Duration.zero);
+    final buyer = AppState(repo);
+    await buyer.signUp(name: 'Rina', email: 'rina@contoh.com', phone: '0817', password: 'rahasia123');
+    final addr = buyer.newAddressDraft()
+      ..street = 'Jl. Mawar 2'
+      ..city = 'Depok'
+      ..postalCode = '16400';
+    await buyer.saveAddress(addr, makeMain: true);
+    final p = buyer.products[1];
+    await buyer.addToCart(p, p.variantOf(PackSize.g500)!, 1);
+    final order = await buyer.placeOrder();
+    expect(order.payBefore, order.date.add(const Duration(hours: 3)));
+    expect(buyer.unreadOrderUpdates, 0);
+
+    final admin = AppState(repo);
+    await admin.signIn('admin@sabila313.com', 'admin12345');
+    await admin.setOrderStatus(admin.adminOrders.first, OrderStatus.processing);
+
+    await buyer.loadOrders();
+    expect(buyer.unreadOrderUpdates, 1);
+    await buyer.markOrdersRead();
+    expect(buyer.unreadOrderUpdates, 0);
+
+    await admin.setShipping(admin.adminOrders.first, 'JNE', 'JP777');
+    await buyer.loadOrders();
+    expect(buyer.unreadOrderUpdates, 1);
+  });
+
+  test('batas bayar 3 jam', () {
+    final dibuat = DateTime(2026, 10, 21, 9, 0);
+    final o = Order(id: '1', date: dibuat, lines: const [], addressText: '', total: 0);
+    expect(o.payBefore, DateTime(2026, 10, 21, 12, 0));
+    expect(dateTime(o.payBefore), '21 Okt 2026, 12.00');
+  });
 }
