@@ -4,7 +4,7 @@ import '../config.dart';
 import '../data/models.dart';
 import 'format.dart';
 
-/// Menyusun pesan otomatis berisi daftar barang, total, dan alamat.
+/// Menyusun pesan otomatis berisi daftar barang, total, nama, no. HP, dan alamat.
 String buildOrderMessage(Order order, UserProfile buyer) {
   final b = StringBuffer()
     ..writeln('Halo Jahe Merah Sabila 313, saya ingin memesan:')
@@ -18,9 +18,13 @@ String buildOrderMessage(Order order, UserProfile buyer) {
     ..writeln()
     ..writeln('Total: ${rupiah(order.total)} (${order.itemCount} barang)')
     ..writeln()
-    ..writeln('Nama: ${buyer.name}')
+    ..writeln('Nama: ${buyer.name}');
+  if (buyer.phone.isNotEmpty) b.writeln('No. HP: ${buyer.phone}');
+  b
     ..writeln('Alamat kirim:')
-    ..write(order.addressText);
+    ..writeln(order.addressText)
+    ..writeln()
+    ..write('Mohon info nomor rekening untuk pembayaran. Terima kasih.');
   return b.toString();
 }
 
@@ -29,4 +33,19 @@ String buildOrderMessage(Order order, UserProfile buyer) {
 Future<bool> openWhatsApp(String message) async {
   final uri = Uri.https('wa.me', '/$sellerWhatsApp', {'text': message});
   return launchUrl(uri, mode: LaunchMode.externalApplication);
+}
+
+/// Pesan admin ke pembeli: total pesanan, rekening toko, dan permintaan bukti transfer.
+String buildPaymentMessage(Order order) {
+  final b = StringBuffer()
+    ..writeln('Halo ${order.buyerName.isEmpty ? 'Kak' : order.buyerName}, terima kasih sudah memesan di Jahe Merah Sabila 313.')
+    ..writeln()
+    ..writeln('Pesanan #${order.number}')
+    ..writeln('Total: ${rupiah(order.total)}')
+    ..writeln()
+    ..writeln('Silakan transfer ke:')
+    ..writeln(rekeningToko)
+    ..writeln()
+    ..write('Setelah transfer, mohon kirim foto bukti transfer di chat ini ya. Pesanan akan kami proses setelah pembayaran dicek.');
+  return b.toString();
 }

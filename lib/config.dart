@@ -9,4 +9,8 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 /// Contoh: 6281234567890
 const sellerWhatsApp = '6288808425275';
 
+/// Rekening toko yang dikirim admin ke pembeli lewat WhatsApp.
+/// Contoh: 'BCA 1234567890 a.n. Sabila 313'. Pisahkan beberapa rekening dengan baris baru (\n).
+const rekeningToko = '';
+
 bool get supabaseConfigured => !supabaseUrl.contains('XXXXXXXX') && !supabaseAnonKey.startsWith('ISI_');
