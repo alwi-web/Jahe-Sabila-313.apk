@@ -29,7 +29,7 @@ impeller = (
     '            android:value="false" />\n'
 )
 # Nama aplikasi di layar HP.
-text = text.replace('android:label="sabila313"', 'android:label="Sabila 313"', 1)
+text = text.replace('android:label="sabila313"', 'android:label="Jahe Merah Sabila 313"', 1)
 
 if "EnableImpeller" not in text:
     text = text.replace("</application>", impeller + "    </application>", 1)
