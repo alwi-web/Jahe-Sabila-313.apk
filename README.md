@@ -13,6 +13,13 @@ Setelah login, aplikasi membaca peran akun dari kolom `profiles.role` di Supabas
 `admin` membuka dashboard admin, selain itu membuka katalog pembeli.
 Data disimpan di **Supabase**.
 
+## Unduh APK
+
+Setiap push ke `main` membangun APK baru dan menerbitkannya di halaman **Releases**.
+APK terbaru selalu bisa diunduh langsung di:
+
+https://github.com/alwi-web/Jahe-Sabila-313.apk/releases/latest/download/sabila313.apk
+
 ## 1. Menjalankan (mode demo, tanpa Supabase)
 
 Butuh Flutter 3.22 atau lebih baru.

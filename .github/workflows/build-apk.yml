@@ -19,6 +19,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -40,3 +42,14 @@ jobs:
         with:
           name: sabila313-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Terbitkan di Releases
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk sabila313.apk
+          gh release create "build-${{ github.run_number }}" sabila313.apk \
+            --target "${{ github.sha }}" \
+            --title "Sabila 313 build ${{ github.run_number }}" \
+            --notes "APK otomatis dari commit ${{ github.sha }}. Unduh file sabila313.apk di bawah lalu pasang di HP Android." \
+            --latest
+        env:
+          GH_TOKEN: ${{ github.token }}
