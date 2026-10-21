@@ -7,6 +7,6 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 /// Nomor WhatsApp penjual, format internasional tanpa tanda + dan tanpa 0 di depan.
 /// Contoh: 6281234567890
-const sellerWhatsApp = '62XXXXXXXXXXX';
+const sellerWhatsApp = '6288808425275';
 
 bool get supabaseConfigured => !supabaseUrl.contains('XXXXXXXX') && !supabaseAnonKey.startsWith('ISI_');
