@@ -19,8 +19,11 @@ class CatalogScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 20,
-        title: const Text('Jahe Merah Sabila 313',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.brown)),
+        title: const Row(children: [
+          BrandLogo(height: 36),
+          SizedBox(width: 10),
+          Text('Jahe Merah Sabila 313', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.brown)),
+        ]),
         actions: const [CartIconButton()],
       ),
       body: RefreshIndicator(
