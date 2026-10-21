@@ -1,4 +1,4 @@
-"""Tambahkan izin INTERNET dan query intent https ke AndroidManifest.xml (lihat README bagian 3)."""
+"""Tambahkan izin INTERNET, query intent https, dan matikan Impeller di AndroidManifest.xml (lihat README bagian 3)."""
 import sys
 
 path = sys.argv[1]
@@ -21,5 +21,14 @@ if 'android:scheme="https"' not in text:
         text = text.replace("<queries>\n", "<queries>\n" + intent, 1)
     else:
         text = text.replace("</manifest>", "    <queries>\n" + intent + "    </queries>\n</manifest>", 1)
+
+# Matikan Impeller: di sebagian HP Android (GPU lama) Impeller membuat layar hitam.
+impeller = (
+    '        <meta-data\n'
+    '            android:name="io.flutter.embedding.android.EnableImpeller"\n'
+    '            android:value="false" />\n'
+)
+if "EnableImpeller" not in text:
+    text = text.replace("</application>", impeller + "    </application>", 1)
 
 open(path, "w", encoding="utf-8").write(text)

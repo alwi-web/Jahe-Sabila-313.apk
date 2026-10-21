@@ -6,6 +6,7 @@ import 'package:sabila313/data/app_state.dart';
 import 'package:sabila313/data/memory_repository.dart';
 import 'package:sabila313/data/models.dart';
 import 'package:sabila313/utils/format.dart';
+import 'package:sabila313/utils/whatsapp.dart';
 
 /// Menguji logika aplikasi memakai MemoryRepository (tanpa Supabase).
 Future<AppState> loggedInState() async {
@@ -129,5 +130,34 @@ void main() {
     expect(admin.products.last.hasPhoto, isFalse);
     await admin.deactivateProduct(admin.products.last.id);
     expect(admin.products.length, 3);
+  });
+
+  test('pesan WhatsApp: pesanan pembeli dan info rekening dari admin', () {
+    final order = Order(
+      id: '7',
+      date: DateTime(2026, 10, 21),
+      lines: const [
+        OrderLine(productName: 'Jahe Merah Tanpa Gula', productId: '3', size: PackSize.g500, qty: 2, unitPrice: 48000),
+      ],
+      addressText: 'Alwi (0812)\nJl. Melati 1, Bogor 16111',
+      total: 96000,
+      buyerName: 'Alwi',
+      buyerPhone: '0812',
+    );
+    final buyer = UserProfile(id: 'u1', name: 'Alwi', email: 'alwi@contoh.com', phone: '0812');
+
+    final pesan = buildOrderMessage(order, buyer);
+    expect(pesan, contains('No. pesanan: #007'));
+    expect(pesan, contains('Jahe Merah Tanpa Gula'));
+    expect(pesan, contains('x2 = Rp 96.000'));
+    expect(pesan, contains('Nama: Alwi'));
+    expect(pesan, contains('No. HP: 0812'));
+    expect(pesan, contains('Jl. Melati 1, Bogor 16111'));
+
+    final bayar = buildPaymentMessage(order);
+    expect(bayar, contains('Halo Alwi'));
+    expect(bayar, contains('Pesanan #007'));
+    expect(bayar, contains('Total: Rp 96.000'));
+    expect(bayar, contains('bukti transfer'));
   });
 }

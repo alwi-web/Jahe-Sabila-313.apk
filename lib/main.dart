@@ -14,29 +14,78 @@ import 'theme.dart';
 /// Untuk menampilkan pesan error dari mana saja.
 final messengerKey = GlobalKey<ScaffoldMessengerState>();
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  runApp(const _Boot());
+}
 
-  final ShopRepository repo;
-  if (supabaseConfigured) {
-    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
-    repo = SupabaseRepository();
-  } else {
-    debugPrint('config.dart belum diisi: aplikasi berjalan dalam MODE DEMO.');
-    repo = MemoryRepository();
+/// Menyiapkan Supabase (atau mode demo) sambil menampilkan layar memuat.
+/// Kalau gagal, pesan error ditampilkan di layar alih-alih layar hitam.
+class _Boot extends StatefulWidget {
+  const _Boot();
+
+  @override
+  State<_Boot> createState() => _BootState();
+}
+
+class _BootState extends State<_Boot> {
+  late Future<ShopRepository> _repo = _initRepo();
+
+  static Future<ShopRepository> _initRepo() async {
+    if (!supabaseConfigured) {
+      debugPrint('config.dart belum diisi: aplikasi berjalan dalam MODE DEMO.');
+      return MemoryRepository();
+    }
+    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey)
+        .timeout(const Duration(seconds: 20));
+    return SupabaseRepository();
   }
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => AppState(
-        repo,
-        onError: (msg) => messengerKey.currentState
-          ?..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(msg))),
-      ),
-      child: const Sabila313App(),
-    ),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<ShopRepository>(
+      future: _repo,
+      builder: (context, snap) {
+        if (snap.hasData) {
+          return ChangeNotifierProvider(
+            create: (_) => AppState(
+              snap.data!,
+              onError: (msg) => messengerKey.currentState
+                ?..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text(msg))),
+            ),
+            child: const Sabila313App(),
+          );
+        }
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildTheme(),
+          home: Scaffold(
+            body: Center(
+              child: snap.hasError
+                  ? Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('Gagal memulai aplikasi', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          const SizedBox(height: 8),
+                          Text('${snap.error}', textAlign: TextAlign.center),
+                          const SizedBox(height: 16),
+                          FilledButton(
+                            onPressed: () => setState(() => _repo = _initRepo()),
+                            child: const Text('Coba lagi'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class Sabila313App extends StatelessWidget {
