@@ -94,6 +94,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               onIncrease: () => setState(() => _qty++),
             ),
           ]),
+          if (p.composition.isNotEmpty) _InfoSection(icon: Icons.eco_outlined, title: 'Komposisi', text: p.composition),
+          if (p.servingSuggestion.isNotEmpty)
+            _InfoSection(icon: Icons.local_cafe_outlined, title: 'Saran penyajian', text: p.servingSuggestion),
+          if (p.storageSuggestion.isNotEmpty)
+            _InfoSection(icon: Icons.inventory_2_outlined, title: 'Saran penyimpanan', text: p.storageSuggestion),
         ],
       ),
       bottomNavigationBar: BottomActions(children: [
@@ -103,6 +108,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           label: const Text('Masukkan ke keranjang'),
         ),
       ]),
+    );
+  }
+}
+
+/// Satu blok informasi produk (komposisi, saran penyajian, saran penyimpanan).
+class _InfoSection extends StatelessWidget {
+  const _InfoSection({required this.icon, required this.title, required this.text});
+
+  final IconData icon;
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: AppCard(
+        padding: const EdgeInsets.all(14),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(color: AppColors.cream, borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, size: 20, color: AppColors.brand),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 4),
+              Text(text, style: const TextStyle(fontSize: 14, color: AppColors.muted, height: 1.5)),
+            ]),
+          ),
+        ]),
+      ),
     );
   }
 }

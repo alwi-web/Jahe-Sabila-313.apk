@@ -22,6 +22,9 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
   final _form = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.draft.name);
   late final _desc = TextEditingController(text: widget.draft.description);
+  late final _composition = TextEditingController(text: widget.draft.composition);
+  late final _serving = TextEditingController(text: widget.draft.servingSuggestion);
+  late final _storage = TextEditingController(text: widget.draft.storageSuggestion);
   late final Map<PackSize, TextEditingController> _price = {
     for (final s in PackSize.values) s: TextEditingController(text: widget.draft.prices[s]?.toString() ?? ''),
   };
@@ -97,6 +100,9 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
   void dispose() {
     _name.dispose();
     _desc.dispose();
+    _composition.dispose();
+    _serving.dispose();
+    _storage.dispose();
     for (final c in [..._price.values, ..._stock.values]) {
       c.dispose();
     }
@@ -109,6 +115,9 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
       id: d.id,
       name: _name.text.trim(),
       description: _desc.text.trim(),
+      composition: _composition.text.trim(),
+      servingSuggestion: _serving.text.trim(),
+      storageSuggestion: _storage.text.trim(),
       imageUrl: d.imageUrl,
       currentImageBytes: d.currentImageBytes,
       prices: {for (final s in PackSize.values) s: int.parse(_price[s]!.text.trim())},
@@ -221,6 +230,26 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
             ),
             const SizedBox(height: 14),
             LabeledField(label: 'Deskripsi', controller: _desc, hint: 'Deskripsi singkat produk', maxLines: 3),
+            const SizedBox(height: 20),
+            const Text('Informasi produk', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            const Text('Opsional. Yang diisi tampil di halaman detail produk pembeli.',
+                style: TextStyle(fontSize: 13, color: AppColors.muted)),
+            const SizedBox(height: 10),
+            LabeledField(
+                label: 'Komposisi', controller: _composition, hint: 'Contoh: jahe merah, gula aren', maxLines: 3),
+            const SizedBox(height: 14),
+            LabeledField(
+                label: 'Saran penyajian',
+                controller: _serving,
+                hint: 'Contoh: seduh 1 sendok makan dengan 200 ml air panas',
+                maxLines: 3),
+            const SizedBox(height: 14),
+            LabeledField(
+                label: 'Saran penyimpanan',
+                controller: _storage,
+                hint: 'Contoh: simpan di tempat kering dan tertutup rapat',
+                maxLines: 3),
             const SizedBox(height: 20),
             const Text('Harga dan stok per ukuran', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),

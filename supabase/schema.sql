@@ -460,3 +460,8 @@ language sql security definer set search_path = public as $$
 $$;
 revoke execute on function public.hapus_token_notif(text) from public, anon;
 grant execute on function public.hapus_token_notif(text) to authenticated;
+
+-- ---------- Informasi produk ----------
+alter table public.produk add column if not exists komposisi text;
+alter table public.produk add column if not exists saran_penyajian text;
+alter table public.produk add column if not exists saran_penyimpanan text;

@@ -133,7 +133,8 @@ class SupabaseRepository implements ShopRepository {
   Future<List<Product>> fetchProducts() async {
     final rows = await _db
         .from('produk')
-        .select('id, nama, deskripsi, warna, gambar, varian_produk(id, ukuran, harga, stok)')
+        // '*': tetap jalan walaupun kolom informasi produk belum dibuat di database.
+        .select('*, varian_produk(id, ukuran, harga, stok)')
         .eq('aktif', true)
         .order('id');
     return rows.map((p) {
@@ -151,6 +152,9 @@ class SupabaseRepository implements ShopRepository {
         description: (p['deskripsi'] as String?) ?? '',
         accent: colorFromHex(p['warna'] as String?),
         imageUrl: p['gambar'] as String?,
+        composition: (p['komposisi'] as String?) ?? '',
+        servingSuggestion: (p['saran_penyajian'] as String?) ?? '',
+        storageSuggestion: (p['saran_penyimpanan'] as String?) ?? '',
         variants: variants,
       );
     }).where((p) => p.variants.isNotEmpty).toList();
@@ -334,7 +338,14 @@ class SupabaseRepository implements ShopRepository {
 
   @override
   Future<void> adminSaveProduct(ProductDraft d) async {
-    final data = {'nama': d.name.trim(), 'deskripsi': d.description.trim()};
+    String? opsional(String v) => v.trim().isEmpty ? null : v.trim();
+    final data = {
+      'nama': d.name.trim(),
+      'deskripsi': d.description.trim(),
+      'komposisi': opsional(d.composition),
+      'saran_penyajian': opsional(d.servingSuggestion),
+      'saran_penyimpanan': opsional(d.storageSuggestion),
+    };
     final int productId;
     if (d.id == null) {
       final row = await _db.from('produk').insert(data).select('id').single();
