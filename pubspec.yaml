@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
   provider: ^6.1.2
   url_launcher: ^6.3.0
-  google_fonts: ^6.2.1
   supabase_flutter: ^2.8.0
   pdf: ^3.11.1
   printing: ^5.13.4
@@ -32,3 +31,18 @@ flutter:
   assets:
     - assets/logo.png
     - assets/banner_kemasan.jpg
+
+  # Font dibundel di APK (sebelumnya diunduh google_fonts saat aplikasi dibuka). Lisensi: assets/fonts/OFL.txt
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
+          weight: 800

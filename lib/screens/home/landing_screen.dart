@@ -25,7 +25,7 @@ class LandingScreen extends StatelessWidget {
         titleSpacing: 20,
         title: const Row(children: [
           BrandLogo(height: 36),
-          SizedBox(width: 10),
+          SizedBox(width: 12),
           Flexible(
             child: Text('Jahe Merah Sabila 313',
                 overflow: TextOverflow.ellipsis,
@@ -46,7 +46,7 @@ class LandingScreen extends StatelessWidget {
             'di setiap seduhan.',
             style: TextStyle(fontSize: 14, color: AppColors.muted, height: 1.55),
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 32),
 
           // Keunggulan
           const Text('Kenapa memilih Sabila 313?', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
@@ -90,7 +90,7 @@ class LandingScreen extends StatelessWidget {
                 child: _VariantCarousel(products: state.products),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
           ],
 
           // Cara memesan
@@ -100,11 +100,11 @@ class LandingScreen extends StatelessWidget {
           const _Step(number: 2, text: 'Checkout. Detail pesananmu otomatis terkirim ke WhatsApp toko.'),
           const _Step(number: 3, text: 'Transfer sesuai info dari admin, lalu kirim bukti transfer di WhatsApp.'),
           const _Step(number: 4, text: 'Pantau status dan nomor resi JNE/J&T di Riwayat pesanan.'),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
           FilledButton(onPressed: toProducts, child: const Text('Mulai belanja')),
           if (!state.loggedIn) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const LoginScreen(returnAfterLogin: true)),
@@ -182,8 +182,8 @@ class _VariantCarousel extends StatefulWidget {
 
   final List<Product> products;
 
-  /// Tinggi kartu (300) + jarak (10) + titik penanda (7).
-  static const height = 317.0;
+  /// Tinggi kartu (300) + jarak (12) + titik penanda (7).
+  static const height = 319.0;
 
   @override
   State<_VariantCarousel> createState() => _VariantCarouselState();
@@ -238,7 +238,7 @@ class _VariantCarouselState extends State<_VariantCarousel> {
           ),
         ),
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: 12),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         for (var i = 0; i < products.length; i++)
           AnimatedContainer(
@@ -385,17 +385,17 @@ class _HeroBanner extends StatelessWidget {
                             ),
                           ]),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         const Text('Jahe Merah Asli dari Petani Lokal',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style:
-                                TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Colors.white, height: 1.2)),
-                        const SizedBox(height: 6),
+                                TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white, height: 1.2)),
+                        const SizedBox(height: 8),
                         const Text('Hangat dan sehat, dari bahan-bahan alami.',
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12.5, color: Color(0xFFF7DCD5), height: 1.35)),
+                            style: TextStyle(fontSize: 12, color: Color(0xFFF7DCD5), height: 1.35)),
                       ]),
                 ),
               ),

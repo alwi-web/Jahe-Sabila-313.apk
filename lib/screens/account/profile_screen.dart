@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 20,
-        title: const Text('Akun saya', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        title: const Text('Akun saya', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
@@ -49,11 +49,11 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(children: [
               UserAvatar(profile: profile),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(profile.name.isEmpty ? 'Pengguna' : profile.name,
-                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   if (profile.email.isNotEmpty)
                     Text(profile.email, style: const TextStyle(fontSize: 13, color: AppColors.muted)),
                   if (profile.phone.isNotEmpty)
@@ -62,7 +62,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ]),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           AppCard(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Column(children: [
@@ -80,7 +80,7 @@ class ProfileScreen extends StatelessWidget {
                   onTap: () => _open(context, const ChangePasswordScreen())),
             ]),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.brand,

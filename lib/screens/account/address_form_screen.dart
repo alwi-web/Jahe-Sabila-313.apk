@@ -111,7 +111,7 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           children: [
             const Text('Label alamat', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Row(children: [
               for (final l in _labels) ...[
                 Expanded(
@@ -120,16 +120,16 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
                 if (l != _labels.last) const SizedBox(width: 8),
               ],
             ]),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(label: 'Nama penerima', controller: _recipient, hint: 'Nama penerima',
                 validator: (v) => requiredField(v, 'Nama penerima')),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(label: 'Nomor HP', controller: _phone, hint: '08xxxxxxxxxx',
                 keyboardType: TextInputType.phone, validator: (v) => requiredField(v, 'Nomor HP')),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(label: 'Alamat lengkap', controller: _street, maxLines: 3,
                 hint: 'Jalan, nomor rumah, RT/RW, kecamatan', validator: (v) => requiredField(v, 'Alamat')),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(
                 child: LabeledField(label: 'Kota/Kabupaten', controller: _city, hint: 'Kota',
@@ -141,7 +141,7 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
                     keyboardType: TextInputType.number, validator: (v) => requiredField(v, 'Kode pos')),
               ),
             ]),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(label: 'Catatan untuk kurir (opsional)', controller: _note,
                 hint: 'Contoh: pagar hitam', textInputAction: TextInputAction.done),
             const SizedBox(height: 8),

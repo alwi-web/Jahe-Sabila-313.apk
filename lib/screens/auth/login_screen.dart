@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.fromLTRB(20, 32, 20, 20),
             children: [
               const AuthHeader(title: 'Masuk', subtitle: 'Masuk untuk mulai berbelanja'),
-              const SizedBox(height: 28),
+              const SizedBox(height: 32),
               LabeledField(
                 label: 'Email',
                 controller: _email,

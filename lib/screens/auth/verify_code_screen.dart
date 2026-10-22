@@ -76,7 +76,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
             subtitle: 'Kode unik 6 digit sudah dikirim ke ${widget.email}. Periksa juga folder spam.',
             showBrand: false,
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 32),
           const Text('Kode unik', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           TextField(
@@ -86,11 +86,11 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
             textAlign: TextAlign.center,
             maxLength: 6,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, letterSpacing: 14),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, letterSpacing: 14),
             decoration: InputDecoration(counterText: '', hintText: '••••••', errorText: _error),
             onSubmitted: (_) => _verify(),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           BusyButton(label: 'Verifikasi kode', busy: _busy, onPressed: _verify),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             const Text('Belum menerima kode?', style: TextStyle(color: AppColors.muted, fontSize: 14)),

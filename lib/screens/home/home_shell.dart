@@ -23,7 +23,9 @@ class HomeShell extends StatelessWidget {
         index: state.tab,
         children: const [LandingScreen(), CatalogScreen(), CartScreen(), ProfileScreen()],
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.line))),
+        child: NavigationBar(
         selectedIndex: state.tab,
         onDestinationSelected: (i) async {
           // Keranjang dan Akun butuh login; tamu diarahkan ke halaman Masuk dulu.
@@ -31,8 +33,6 @@ class HomeShell extends StatelessWidget {
           if (needsAccount && !await requireLogin(context)) return;
           state.setTab(i);
         },
-        backgroundColor: Colors.white,
-        indicatorColor: AppColors.cream,
         destinations: [
           const NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -75,6 +75,7 @@ class HomeShell extends StatelessWidget {
             label: 'Akun',
           ),
         ],
+      ),
       ),
     );
   }

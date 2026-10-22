@@ -54,7 +54,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               subtitle: 'Masukkan email akunmu. Kami kirim kode unik lewat email untuk mengatur ulang password.',
               showBrand: false,
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 32),
             LabeledField(
               label: 'Email',
               controller: _email,

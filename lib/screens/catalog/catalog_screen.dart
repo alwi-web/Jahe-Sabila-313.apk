@@ -21,7 +21,7 @@ class CatalogScreen extends StatelessWidget {
         titleSpacing: 20,
         title: const Row(children: [
           BrandLogo(height: 36),
-          SizedBox(width: 10),
+          SizedBox(width: 12),
           Flexible(
             child: Text('Jahe Merah Sabila 313',
                 overflow: TextOverflow.ellipsis,
@@ -36,7 +36,7 @@ class CatalogScreen extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           children: [
-            const Text('Produk kami', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700)),
+            const Text('Produk kami', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
             const Text('Pilih varian jahe merah favoritmu', style: TextStyle(fontSize: 14, color: AppColors.muted)),
             const SizedBox(height: 16),
@@ -79,12 +79,15 @@ class _ProductCard extends StatelessWidget {
       child: AppCard(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ProductThumb(size: 96, product: product),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(product.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, height: 1.3)),
               const SizedBox(height: 4),
-              Text(product.description, style: const TextStyle(fontSize: 13, color: AppColors.muted, height: 1.4)),
+              Text(product.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 13, color: AppColors.muted, height: 1.4)),
               const SizedBox(height: 4),
               Text(product.variants.map((v) => v.size.label).join(' · '),
                   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.brown)),
@@ -93,8 +96,7 @@ class _ProductCard extends StatelessWidget {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     const Text('Mulai', style: TextStyle(fontSize: 12, color: AppColors.muted)),
-                    Text(rupiah(product.startingPrice),
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.brand)),
+                    Text(rupiah(product.startingPrice), style: AppText.price),
                   ]),
                 ),
                 FilledButton(
@@ -102,7 +104,7 @@ class _ProductCard extends StatelessWidget {
                     minimumSize: const Size(64, 44),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    textStyle: const TextStyle(fontFamily: AppText.family, fontSize: 14, fontWeight: FontWeight.w700),
                   ),
                   onPressed: () => _open(context),
                   child: const Text('Pilih'),

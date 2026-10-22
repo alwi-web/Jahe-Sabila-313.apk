@@ -5,6 +5,7 @@ import '../../data/app_state.dart';
 import '../../data/models.dart';
 import '../../theme.dart';
 import '../../utils/format.dart';
+import '../../widgets/common.dart';
 import 'admin_dashboard_screen.dart';
 import 'admin_orders_screen.dart';
 import 'admin_products_screen.dart';
@@ -23,11 +24,11 @@ class AdminShell extends StatelessWidget {
         index: state.adminTab,
         children: const [AdminDashboardScreen(), AdminOrdersScreen(), AdminProductsScreen(), AdminReportScreen()],
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.line))),
+        child: NavigationBar(
         selectedIndex: state.adminTab,
         onDestinationSelected: state.setAdminTab,
-        backgroundColor: Colors.white,
-        indicatorColor: AppColors.cream,
         destinations: [
           const NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -61,6 +62,7 @@ class AdminShell extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
   }
 }
@@ -74,7 +76,9 @@ class AdminOrderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), boxShadow: AppShadow.card),
+      child: Material(
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -107,6 +111,7 @@ class AdminOrderTile extends StatelessWidget {
             ]),
           ]),
         ),
+      ),
       ),
     );
   }
