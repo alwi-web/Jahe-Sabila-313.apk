@@ -112,7 +112,14 @@ class LandingScreen extends StatelessWidget {
               TextButton(onPressed: toProducts, child: const Text('Lihat semua')),
             ]),
             const SizedBox(height: 8),
-            _VariantCarousel(products: state.products),
+            // Melebar sampai tepi layar supaya kartu samping tidak terpotong margin halaman.
+            SizedBox(
+              height: _VariantCarousel.height,
+              child: OverflowBox(
+                maxWidth: MediaQuery.sizeOf(context).width,
+                child: _VariantCarousel(products: state.products),
+              ),
+            ),
             const SizedBox(height: 18),
           ],
 
@@ -205,6 +212,9 @@ class _VariantCarousel extends StatefulWidget {
 
   final List<Product> products;
 
+  /// Tinggi kartu (300) + jarak (10) + titik penanda (7).
+  static const height = 317.0;
+
   @override
   State<_VariantCarousel> createState() => _VariantCarouselState();
 }
@@ -232,6 +242,7 @@ class _VariantCarouselState extends State<_VariantCarousel> {
         height: 300,
         child: PageView.builder(
           controller: _controller,
+          physics: const _SoftPagePhysics(),
           itemCount: products.length,
           onPageChanged: (i) => setState(() => _current = i),
           itemBuilder: (context, i) => AnimatedBuilder(
@@ -242,7 +253,7 @@ class _VariantCarouselState extends State<_VariantCarousel> {
                   ? _controller.page!
                   : _start.toDouble();
               final d = (page - i).abs().clamp(0.0, 1.0);
-              final blur = d * 3.0;
+              final blur = d * 2.4;
               Widget card = Transform.scale(
                 scale: 1 - d * 0.14,
                 child: Opacity(opacity: 1 - d * 0.45, child: child),
@@ -252,7 +263,8 @@ class _VariantCarouselState extends State<_VariantCarousel> {
               }
               return card;
             },
-            child: _VariantCard(product: products[i], onTap: () => _open(products[i])),
+            // Kartu digambar sekali ke lapisannya sendiri; saat digeser hanya skala/opacity/blur yang dihitung ulang.
+            child: RepaintBoundary(child: _VariantCard(product: products[i], onTap: () => _open(products[i]))),
           ),
         ),
       ),
@@ -326,4 +338,15 @@ class _VariantCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Snap halaman dengan pegas yang lebih lembut daripada bawaan PageView.
+class _SoftPagePhysics extends PageScrollPhysics {
+  const _SoftPagePhysics({super.parent});
+
+  @override
+  _SoftPagePhysics applyTo(ScrollPhysics? ancestor) => _SoftPagePhysics(parent: buildParent(ancestor));
+
+  @override
+  SpringDescription get spring => SpringDescription.withDampingRatio(mass: 1, stiffness: 120, ratio: 1.0);
 }
