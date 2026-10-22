@@ -114,7 +114,8 @@ class SupabaseRepository implements ShopRepository {
     await _db.storage.from('avatar').uploadBinary(
           path,
           bytes,
-          fileOptions: FileOptions(contentType: ext == 'png' ? 'image/png' : 'image/jpeg', upsert: true),
+          // Tanpa upsert: nama file selalu baru, dan upsert butuh izin baca objek tambahan di Storage.
+          fileOptions: FileOptions(contentType: ext == 'png' ? 'image/png' : 'image/jpeg'),
         );
     final url = _db.storage.from('avatar').getPublicUrl(path);
     await _db.from('profiles').update({'foto': url}).eq('id', _uid);
@@ -349,7 +350,7 @@ class SupabaseRepository implements ShopRepository {
       await _db.storage.from('produk').uploadBinary(
             path,
             d.newImageBytes!,
-            fileOptions: FileOptions(contentType: d.newImageExt == 'png' ? 'image/png' : 'image/jpeg', upsert: true),
+            fileOptions: FileOptions(contentType: d.newImageExt == 'png' ? 'image/png' : 'image/jpeg'),
           );
       imageUrl = _db.storage.from('produk').getPublicUrl(path);
     }

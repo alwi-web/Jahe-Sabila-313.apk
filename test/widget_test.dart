@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show StorageException;
 
 import 'package:sabila313/data/app_state.dart';
 import 'package:sabila313/data/memory_repository.dart';
 import 'package:sabila313/data/models.dart';
+import 'package:sabila313/utils/errors.dart';
 import 'package:sabila313/utils/format.dart';
 import 'package:sabila313/utils/whatsapp.dart';
 
@@ -237,5 +239,12 @@ void main() {
     expect(s.profile.hasPhoto, isTrue);
     await s.removeProfilePhoto();
     expect(s.profile.hasPhoto, isFalse);
+  });
+
+  test('pesan error unggah foto (Storage) jelas, bukan pesan umum', () {
+    expect(friendlyError(const StorageException('Bucket not found', statusCode: '404')), contains('belum disiapkan'));
+    expect(friendlyError(const StorageException('new row violates row-level security policy', statusCode: '403')),
+        contains('Tidak diizinkan'));
+    expect(friendlyError(const StorageException('Something else', statusCode: '500')), 'Gagal mengunggah foto: Something else');
   });
 }
