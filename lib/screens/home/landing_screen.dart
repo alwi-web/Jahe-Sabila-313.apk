@@ -37,44 +37,14 @@ class LandingScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
         children: [
-          // Sambutan
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-            decoration: BoxDecoration(
-              color: AppColors.cream,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.line),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Center(child: BrandLogo(height: 96)),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(999)),
-                child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.verified_outlined, size: 16, color: AppColors.success),
-                  SizedBox(width: 6),
-                  Text('Bersertifikat Halal',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success)),
-                ]),
-              ),
-              const SizedBox(height: 12),
-              const Text('Hangatnya jahe merah asli, langsung dari kebun petani lokal',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.25)),
-              const SizedBox(height: 10),
-              const Text(
-                'Jahe Merah Sabila 313 diolah dari jahe merah pilihan dan bahan-bahan alami, '
-                'dipanen dari perkebunan petani lokal, supaya kehangatan dan khasiatnya tetap terjaga '
-                'di setiap seduhan.',
-                style: TextStyle(fontSize: 14, color: AppColors.muted, height: 1.55),
-              ),
-              const SizedBox(height: 18),
-              FilledButton.icon(
-                onPressed: toProducts,
-                icon: const Icon(Icons.storefront_outlined),
-                label: const Text('Lihat produk'),
-              ),
-            ]),
+          // Sambutan: banner foto kemasan + panel merah, seperti banner promo toko online.
+          _HeroBanner(onTap: toProducts),
+          const SizedBox(height: 16),
+          const Text(
+            'Jahe Merah Sabila 313 diolah dari jahe merah pilihan dan bahan-bahan alami, '
+            'dipanen dari perkebunan petani lokal, supaya kehangatan dan khasiatnya tetap terjaga '
+            'di setiap seduhan.',
+            style: TextStyle(fontSize: 14, color: AppColors.muted, height: 1.55),
           ),
           const SizedBox(height: 28),
 
@@ -349,4 +319,101 @@ class _SoftPagePhysics extends PageScrollPhysics {
 
   @override
   SpringDescription get spring => SpringDescription.withDampingRatio(mass: 1, stiffness: 120, ratio: 1.0);
+}
+
+/// Banner sambutan: foto kemasan di kiri, panel merah berisi label halal, judul, dan tombol di kanan.
+class _HeroBanner extends StatelessWidget {
+  const _HeroBanner({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.brand,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          height: 210,
+          child: LayoutBuilder(builder: (context, c) {
+            final panelWidth = c.maxWidth * 0.58;
+            return Stack(children: [
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: c.maxWidth - panelWidth + 28,
+                child: Image.asset(
+                  'assets/banner_kemasan.jpg',
+                  fit: BoxFit.cover,
+                  semanticLabel: 'Kemasan Jahe Merah Sabila 313',
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                width: panelWidth,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppColors.brand, Color(0xFF7E2214)],
+                    ),
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(28)),
+                  ),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
+                      child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                        Icon(Icons.verified, size: 14, color: AppColors.success),
+                        SizedBox(width: 4),
+                        Flexible(
+                          child: Text('Bersertifikat Halal',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.success)),
+                        ),
+                      ]),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text('Jahe Merah Asli dari Petani Lokal',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Colors.white, height: 1.2)),
+                    const SizedBox(height: 6),
+                    const Text('Hangat dan sehat, dari bahan-bahan alami.',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 12.5, color: Color(0xFFF7DCD5), height: 1.35)),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 1.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                        Flexible(
+                          child: Text('Lihat produk',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)),
+                        ),
+                        SizedBox(width: 6),
+                        Icon(Icons.arrow_forward, size: 16, color: Colors.white),
+                      ]),
+                    ),
+                  ]),
+                ),
+              ),
+            ]);
+          }),
+        ),
+      ),
+    );
+  }
 }
