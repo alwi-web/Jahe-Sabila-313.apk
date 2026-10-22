@@ -163,20 +163,27 @@ async function tanganiWebhook(req: Request): Promise<Response> {
           message: {
             token,
             notification: { title: n.judul, body: n.isi },
-            android: { priority: "HIGH" },
+            android: {
+              priority: "HIGH",
+              notification: { channel_id: "pesanan", default_sound: true, notification_priority: "PRIORITY_HIGH" },
+            },
           },
         }),
       });
       if (res.ok) {
         terkirim++;
-      } else if (res.status === 404 || res.status === 400) {
-        // Token tidak berlaku lagi (aplikasi dihapus / data dibersihkan): buang dari daftar.
+        continue;
+      }
+      const galat = await res.text();
+      console.error("FCM gagal", res.status, galat);
+      // Hapus token hanya kalau memang tidak berlaku lagi (aplikasi dihapus / data dibersihkan),
+      // bukan untuk 400 lain (mis. isi pesan salah) yang akan menghapus token yang masih sah.
+      if (res.status === 404 || galat.includes("UNREGISTERED") || galat.includes("registration token")) {
         await db(`perangkat_notif?token=eq.${encodeURIComponent(token)}`, { method: "DELETE" });
-      } else {
-        console.error("FCM gagal", res.status, await res.text());
       }
     }
   }
+  console.log(`pesanan #${nomor(kini.id)} ${payload.type}: ${daftar.map((n) => n.kepada).join(",")}, terkirim ${terkirim}`);
   return new Response(`terkirim ${terkirim}`);
 }
 
