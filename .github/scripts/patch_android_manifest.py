@@ -1,4 +1,4 @@
-"""Tambahkan izin INTERNET, query intent https, dan matikan Impeller di AndroidManifest.xml (lihat README bagian 3)."""
+"""Tambahkan izin INTERNET, query intent https, matikan Impeller, dan kanal notifikasi di AndroidManifest.xml (lihat README bagian 3)."""
 import sys
 
 path = sys.argv[1]
@@ -33,5 +33,14 @@ text = text.replace('android:label="sabila313"', 'android:label="Jahe Merah Sabi
 
 if "EnableImpeller" not in text:
     text = text.replace("</application>", impeller + "    </application>", 1)
+
+# Notifikasi FCM tanpa channel_id memakai kanal "pesanan" (dibuat di MainActivity.kt).
+channel = (
+    '        <meta-data\n'
+    '            android:name="com.google.firebase.messaging.default_notification_channel_id"\n'
+    '            android:value="pesanan" />\n'
+)
+if "default_notification_channel_id" not in text:
+    text = text.replace("</application>", channel + "    </application>", 1)
 
 open(path, "w", encoding="utf-8").write(text)
