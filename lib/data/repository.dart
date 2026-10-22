@@ -33,6 +33,10 @@ abstract class ShopRepository {
   /// Mengembalikan true kalau email diganti dan perlu dikonfirmasi lewat email baru.
   Future<bool> updateProfile(UserProfile profile, {required String previousEmail});
 
+  /// Token push notification HP ini (Firebase), disimpan untuk akun yang sedang login.
+  Future<void> saveDeviceToken(String token);
+  Future<void> removeDeviceToken(String token);
+
   /// Mengunggah foto profil ([ext] = jpg/png), mengembalikan URL-nya.
   Future<String> uploadProfilePhoto(Uint8List bytes, String ext);
   Future<void> removeProfilePhoto();

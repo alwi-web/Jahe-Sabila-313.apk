@@ -132,6 +132,12 @@ class MemoryRepository implements ShopRepository {
   }
 
   @override
+  Future<void> saveDeviceToken(String token) async {}
+
+  @override
+  Future<void> removeDeviceToken(String token) async {}
+
+  @override
   Future<String> uploadProfilePhoto(Uint8List bytes, String ext) async {
     await _wait();
     _me

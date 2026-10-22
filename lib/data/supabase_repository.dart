@@ -97,6 +97,16 @@ class SupabaseRepository implements ShopRepository {
     return false;
   }
 
+  @override
+  Future<void> saveDeviceToken(String token) async {
+    await _db.rpc('simpan_token_notif', params: {'p_token': token});
+  }
+
+  @override
+  Future<void> removeDeviceToken(String token) async {
+    await _db.rpc('hapus_token_notif', params: {'p_token': token});
+  }
+
   // Foto profil di Supabase Storage, bucket "avatar", folder per pengguna (<uid>/...).
   @override
   Future<String> uploadProfilePhoto(Uint8List bytes, String ext) async {

@@ -79,6 +79,20 @@ update public.profiles set role = 'admin'
 where id = (select id from auth.users where email = 'email-admin@contoh.com');
 ```
 
+## Push notification (Firebase)
+
+Admin mendapat notifikasi saat ada pesanan baru; pembeli saat status atau resi pesanannya berubah
+(termasuk batal otomatis). Konfigurasi Firebase proyek `sabila313` ada di `lib/firebase_options.dart`.
+
+1. **SQL Editor**: jalankan `supabase/migrasi_notifikasi.sql` (tabel token HP).
+2. **Edge Functions → Deploy a new function → Via Editor**: nama `kirim-notif`, tempel isi
+   `supabase/functions/kirim-notif/index.ts`, lalu Deploy.
+3. **Edge Functions → Secrets**: tambahkan `FCM_SERVICE_ACCOUNT` berisi seluruh isi file JSON
+   service account Firebase (Firebase Console → Project settings → Service accounts →
+   Generate new private key). Jangan simpan file itu di repo.
+4. **Database → Webhooks → Create a new hook**: tabel `pesanan`, event **Insert** dan **Update**,
+   tipe **Supabase Edge Functions**, fungsi `kirim-notif`, metode POST, dengan header auth service key.
+
 ## 3. Pengaturan Android
 
 Di `android/app/src/main/AndroidManifest.xml`:

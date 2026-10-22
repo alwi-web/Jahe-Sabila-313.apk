@@ -89,7 +89,11 @@ class AppState extends ChangeNotifier {
     return true;
   }
 
+  /// Dipanggil sebelum keluar, selagi sesi masih aktif (mis. menghapus token push).
+  Future<void> Function()? onBeforeSignOut;
+
   Future<void> signOut() async {
+    await onBeforeSignOut?.call();
     await repo.signOut();
     _clearSession();
   }

@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config.dart';
 import 'data/app_state.dart';
 import 'data/memory_repository.dart';
+import 'data/push_service.dart';
 import 'data/repository.dart';
 import 'data/supabase_repository.dart';
 import 'screens/home/router.dart';
@@ -12,6 +13,10 @@ import 'theme.dart';
 
 /// Untuk menampilkan pesan error dari mana saja.
 final messengerKey = GlobalKey<ScaffoldMessengerState>();
+
+void _showMessage(String msg) => messengerKey.currentState
+  ?..hideCurrentSnackBar()
+  ..showSnackBar(SnackBar(content: Text(msg)));
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,12 +52,12 @@ class _BootState extends State<_Boot> {
       builder: (context, snap) {
         if (snap.hasData) {
           return ChangeNotifierProvider(
-            create: (_) => AppState(
-              snap.data!,
-              onError: (msg) => messengerKey.currentState
-                ?..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(content: Text(msg))),
-            ),
+            create: (_) {
+              final state = AppState(snap.data!, onError: _showMessage);
+              // Push notification hanya untuk data asli di Supabase, bukan mode demo.
+              if (supabaseConfigured) PushService(state, showMessage: _showMessage).start();
+              return state;
+            },
             child: const Sabila313App(),
           );
         }
