@@ -200,12 +200,24 @@ class Address {
 }
 
 class UserProfile {
-  UserProfile({required this.id, required this.name, required this.email, required this.phone});
+  UserProfile({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone,
+    this.photoUrl = '',
+    this.photoBytes,
+  });
 
   final String id;
   String name;
   String email;
   String phone;
+
+  /// Foto profil: URL di Supabase Storage (bucket avatar), atau byte di mode demo.
+  String photoUrl;
+  Uint8List? photoBytes;
+  bool get hasPhoto => photoBytes != null || photoUrl.isNotEmpty;
 
   static UserProfile get empty => UserProfile(id: '', name: '', email: '', phone: '');
 

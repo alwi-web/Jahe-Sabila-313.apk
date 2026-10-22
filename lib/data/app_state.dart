@@ -115,9 +115,38 @@ class AppState extends ChangeNotifier {
     final previousEmail = profile.email;
     final updated = UserProfile(id: profile.id, name: name, email: email, phone: phone);
     final needsConfirm = await repo.updateProfile(updated, previousEmail: previousEmail);
-    _user = UserProfile(id: updated.id, name: name, email: needsConfirm ? previousEmail : email, phone: phone);
+    _user = UserProfile(
+      id: updated.id,
+      name: name,
+      email: needsConfirm ? previousEmail : email,
+      phone: phone,
+      photoUrl: profile.photoUrl,
+      photoBytes: profile.photoBytes,
+    );
     notifyListeners();
     return needsConfirm;
+  }
+
+  /// Mengganti foto profil; [ext] = jpg atau png.
+  Future<void> changeProfilePhoto(Uint8List bytes, String ext) async {
+    final url = await repo.uploadProfilePhoto(bytes, ext);
+    final p = profile;
+    if (url.isEmpty) {
+      p.photoBytes = bytes; // mode demo: foto disimpan di memori
+    } else {
+      p
+        ..photoUrl = url
+        ..photoBytes = null;
+    }
+    notifyListeners();
+  }
+
+  Future<void> removeProfilePhoto() async {
+    await repo.removeProfilePhoto();
+    profile
+      ..photoUrl = ''
+      ..photoBytes = null;
+    notifyListeners();
   }
 
   // ---------------- Produk ----------------

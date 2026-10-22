@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'models.dart';
 
 /// Satu baris keranjang seperti yang tersimpan di database.
@@ -30,6 +32,10 @@ abstract class ShopRepository {
 
   /// Mengembalikan true kalau email diganti dan perlu dikonfirmasi lewat email baru.
   Future<bool> updateProfile(UserProfile profile, {required String previousEmail});
+
+  /// Mengunggah foto profil ([ext] = jpg/png), mengembalikan URL-nya.
+  Future<String> uploadProfilePhoto(Uint8List bytes, String ext);
+  Future<void> removeProfilePhoto();
 
   // Produk
   Future<List<Product>> fetchProducts();

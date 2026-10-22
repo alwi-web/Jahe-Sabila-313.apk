@@ -227,4 +227,15 @@ void main() {
     expect(o.payBefore, DateTime(2026, 10, 21, 12, 0));
     expect(dateTime(o.payBefore), '21 Okt 2026, 12.00');
   });
+
+  test('foto profil: ganti, tetap ada setelah ubah profil, lalu hapus', () async {
+    final s = await loggedInState();
+    expect(s.profile.hasPhoto, isFalse);
+    await s.changeProfilePhoto(Uint8List.fromList([1, 2, 3]), 'jpg');
+    expect(s.profile.hasPhoto, isTrue);
+    await s.updateProfile(name: 'Alwi S', email: s.profile.email, phone: '0812');
+    expect(s.profile.hasPhoto, isTrue);
+    await s.removeProfilePhoto();
+    expect(s.profile.hasPhoto, isFalse);
+  });
 }

@@ -47,12 +47,7 @@ class ProfileScreen extends StatelessWidget {
           AppCard(
             padding: const EdgeInsets.all(16),
             child: Row(children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: AppColors.kraft,
-                child: Text(profile.initial,
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.ink)),
-              ),
+              UserAvatar(profile: profile),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
