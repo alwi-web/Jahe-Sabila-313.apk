@@ -22,7 +22,11 @@ class CatalogScreen extends StatelessWidget {
         title: const Row(children: [
           BrandLogo(height: 36),
           SizedBox(width: 10),
-          Text('Jahe Merah Sabila 313', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.brown)),
+          Flexible(
+            child: Text('Jahe Merah Sabila 313',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.brown)),
+          ),
         ]),
         actions: const [CartIconButton()],
       ),
