@@ -336,6 +336,9 @@ class MemoryRepository implements ShopRepository {
       id: id,
       name: d.name.trim(),
       description: d.description.trim(),
+      composition: d.composition.trim(),
+      servingSuggestion: d.servingSuggestion.trim(),
+      storageSuggestion: d.storageSuggestion.trim(),
       accent: i >= 0 ? _products[i].accent : const Color(0xFFA8321F),
       imageBytes: d.newImageBytes ?? (d.removeImage ? null : d.currentImageBytes),
       variants: [

@@ -247,4 +247,20 @@ void main() {
         contains('Tidak diizinkan'));
     expect(friendlyError(const StorageException('Something else', statusCode: '500')), 'Gagal mengunggah foto: Something else');
   });
+
+  test('admin mengisi komposisi, saran penyajian, dan saran penyimpanan', () async {
+    final repo = MemoryRepository(latency: Duration.zero);
+    final admin = AppState(repo);
+    await admin.signIn('admin@sabila313.com', 'admin12345');
+    final draft = ProductDraft.fromProduct(admin.products.first)
+      ..composition = 'Jahe merah, gula aren'
+      ..servingSuggestion = 'Seduh dengan 200 ml air panas'
+      ..storageSuggestion = '';
+    await admin.saveProduct(draft);
+    final p = admin.products.firstWhere((x) => x.id == draft.id);
+    expect(p.composition, 'Jahe merah, gula aren');
+    expect(p.servingSuggestion, 'Seduh dengan 200 ml air panas');
+    expect(p.storageSuggestion, isEmpty);
+    expect(ProductDraft.fromProduct(p).composition, 'Jahe merah, gula aren');
+  });
 }

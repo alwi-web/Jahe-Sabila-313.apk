@@ -37,11 +37,19 @@ class Product {
     required List<Variant> variants,
     this.imageUrl,
     this.imageBytes,
+    this.composition = '',
+    this.servingSuggestion = '',
+    this.storageSuggestion = '',
   }) : variants = [...variants]..sort((a, b) => a.size.index.compareTo(b.size.index));
 
   final String id;
   final String name;
   final String description;
+
+  /// Informasi tambahan dari admin; tampil di detail produk kalau diisi.
+  final String composition;
+  final String servingSuggestion;
+  final String storageSuggestion;
 
   /// Warna garis label pada kemasan, pembeda antar varian.
   final Color accent;
@@ -230,6 +238,9 @@ class ProductDraft {
     this.id,
     this.name = '',
     this.description = '',
+    this.composition = '',
+    this.servingSuggestion = '',
+    this.storageSuggestion = '',
     this.imageUrl,
     this.currentImageBytes,
     Map<PackSize, int>? prices,
@@ -241,6 +252,9 @@ class ProductDraft {
   final String? id;
   String name;
   String description;
+  String composition;
+  String servingSuggestion;
+  String storageSuggestion;
 
   /// Foto yang sudah tersimpan (URL di Supabase Storage).
   String? imageUrl;
@@ -261,6 +275,9 @@ class ProductDraft {
         id: p.id,
         name: p.name,
         description: p.description,
+        composition: p.composition,
+        servingSuggestion: p.servingSuggestion,
+        storageSuggestion: p.storageSuggestion,
         imageUrl: p.imageUrl,
         currentImageBytes: p.imageBytes,
         prices: {for (final v in p.variants) v.size: v.price},
