@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../data/app_state.dart';
 import '../data/models.dart';
+import '../screens/auth/require_login.dart';
 import '../screens/cart/cart_screen.dart';
 import '../theme.dart';
 import '../utils/errors.dart';
@@ -404,7 +405,10 @@ class CartIconButton extends StatelessWidget {
       child: IconButton(
         tooltip: 'Keranjang, $count barang',
         style: IconButton.styleFrom(backgroundColor: AppColors.cream),
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen(pushed: true))),
+        onPressed: () async {
+          if (!await requireLogin(context) || !context.mounted) return;
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen(pushed: true)));
+        },
         icon: Badge(
           isLabelVisible: count > 0,
           label: Text('$count'),

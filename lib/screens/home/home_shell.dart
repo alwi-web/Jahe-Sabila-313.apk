@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import '../../data/app_state.dart';
 import '../../theme.dart';
 import '../account/profile_screen.dart';
+import '../auth/require_login.dart';
 import '../cart/cart_screen.dart';
 import '../catalog/catalog_screen.dart';
+import 'landing_screen.dart';
 
-/// Kerangka utama setelah login: Beranda, Keranjang, Akun.
+/// Kerangka utama pembeli dan tamu: Beranda, Produk, Keranjang, Akun.
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key});
 
@@ -19,11 +21,16 @@ class HomeShell extends StatelessWidget {
     return Scaffold(
       body: IndexedStack(
         index: state.tab,
-        children: const [CatalogScreen(), CartScreen(), ProfileScreen()],
+        children: const [LandingScreen(), CatalogScreen(), CartScreen(), ProfileScreen()],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: state.tab,
-        onDestinationSelected: state.setTab,
+        onDestinationSelected: (i) async {
+          // Keranjang dan Akun butuh login; tamu diarahkan ke halaman Masuk dulu.
+          final needsAccount = i == AppState.tabCart || i == AppState.tabAccount;
+          if (needsAccount && !await requireLogin(context)) return;
+          state.setTab(i);
+        },
         backgroundColor: Colors.white,
         indicatorColor: AppColors.cream,
         destinations: [
@@ -31,6 +38,11 @@ class HomeShell extends StatelessWidget {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home, color: AppColors.brand),
             label: 'Beranda',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.storefront_outlined),
+            selectedIcon: Icon(Icons.storefront, color: AppColors.brand),
+            label: 'Produk',
           ),
           NavigationDestination(
             icon: Badge(

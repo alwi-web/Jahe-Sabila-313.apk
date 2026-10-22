@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../data/app_state.dart';
 import '../../theme.dart';
 import '../../widgets/common.dart';
-import '../auth/login_screen.dart';
+import '../home/router.dart';
 import 'address_list_screen.dart';
 import 'change_password_screen.dart';
 import 'edit_profile_screen.dart';
@@ -26,8 +26,9 @@ class ProfileScreen extends StatelessWidget {
   Future<void> _logout(BuildContext context) async {
     final ok = await runGuarded(context, context.read<AppState>().signOut);
     if (!ok || !context.mounted) return;
+    // Setelah keluar kembali ke Beranda sebagai tamu.
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => homeFor(context.read<AppState>())),
       (_) => false,
     );
   }
@@ -107,20 +108,24 @@ class _MenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      minTileHeight: 56,
-      onTap: onTap,
-      leading: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(color: AppColors.cream, borderRadius: BorderRadius.circular(10)),
-        child: Icon(icon, size: 18, color: AppColors.brown),
+    // Material sendiri supaya efek sentuh terlihat di atas kartu putih.
+    return Material(
+      type: MaterialType.transparency,
+      child: ListTile(
+        minTileHeight: 56,
+        onTap: onTap,
+        leading: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(color: AppColors.cream, borderRadius: BorderRadius.circular(10)),
+          child: Icon(icon, size: 18, color: AppColors.brown),
+        ),
+        title: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+          if (badge > 0) Badge(label: Text('$badge'), backgroundColor: AppColors.brand),
+          const Icon(Icons.chevron_right, color: AppColors.muted),
+        ]),
       ),
-      title: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (badge > 0) Badge(label: Text('$badge'), backgroundColor: AppColors.brand),
-        const Icon(Icons.chevron_right, color: AppColors.muted),
-      ]),
     );
   }
 }

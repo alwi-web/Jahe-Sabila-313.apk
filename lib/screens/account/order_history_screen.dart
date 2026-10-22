@@ -190,7 +190,7 @@ class _OrderCard extends StatelessWidget {
             onPressed: () async {
               final missing = await state.reorder(order);
               if (!context.mounted) return;
-              state.setTab(1);
+              state.setTab(AppState.tabCart);
               Navigator.of(context).popUntil((r) => r.isFirst);
               if (missing > 0) {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -19,8 +19,9 @@ class AppState extends ChangeNotifier {
   void _report(Object e) => onError?.call(friendlyError(e));
 
   // ---------------- Navigasi bawah ----------------
-  /// 0 = Beranda, 1 = Keranjang, 2 = Akun.
-  int tab = 0;
+  /// Tab pembeli. Tamu (belum login) hanya bisa membuka Beranda dan Produk.
+  static const tabHome = 0, tabProducts = 1, tabCart = 2, tabAccount = 3;
+  int tab = tabHome;
 
   void setTab(int value) {
     tab = value;
@@ -44,7 +45,7 @@ class AppState extends ChangeNotifier {
       await loadProducts();
       await loadAdminOrders();
     } else {
-      tab = 0;
+      // Tab tidak diubah: tamu yang login dari halaman Produk tetap di Produk.
       await loadAll();
     }
   }
@@ -54,7 +55,13 @@ class AppState extends ChangeNotifier {
   Future<bool> bootstrap() async {
     try {
       _user = await repo.currentUser();
-      if (_user != null) await _afterLogin();
+      if (_user != null) {
+        await _afterLogin();
+      } else {
+        // Tamu: tetap bisa melihat Beranda dan katalog produk.
+        await loadStoreSettings();
+        await loadProducts();
+      }
     } catch (e) {
       _report(e);
     }
@@ -94,7 +101,7 @@ class AppState extends ChangeNotifier {
     _cart = [];
     _addresses = [];
     _orders = [];
-    tab = 0;
+    tab = tabHome;
     notifyListeners();
   }
 
