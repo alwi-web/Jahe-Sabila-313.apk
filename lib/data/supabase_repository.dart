@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'models.dart';
@@ -19,12 +21,14 @@ class SupabaseRepository implements ShopRepository {
   // ---------------- Akun ----------------
 
   Future<UserProfile> _profileOf(User user) async {
-    final row = await _db.from('profiles').select('nama, no_hp').eq('id', user.id).maybeSingle();
+    // select('*'): tetap jalan walaupun kolom foto belum dibuat di database.
+    final row = await _db.from('profiles').select().eq('id', user.id).maybeSingle();
     return UserProfile(
       id: user.id,
       name: (row?['nama'] as String?) ?? '',
       email: user.email ?? '',
       phone: (row?['no_hp'] as String?) ?? '',
+      photoUrl: (row?['foto'] as String?) ?? '',
     );
   }
 
@@ -91,6 +95,25 @@ class SupabaseRepository implements ShopRepository {
       return true;
     }
     return false;
+  }
+
+  // Foto profil di Supabase Storage, bucket "avatar", folder per pengguna (<uid>/...).
+  @override
+  Future<String> uploadProfilePhoto(Uint8List bytes, String ext) async {
+    final path = '$_uid/${DateTime.now().millisecondsSinceEpoch}.$ext';
+    await _db.storage.from('avatar').uploadBinary(
+          path,
+          bytes,
+          fileOptions: FileOptions(contentType: ext == 'png' ? 'image/png' : 'image/jpeg', upsert: true),
+        );
+    final url = _db.storage.from('avatar').getPublicUrl(path);
+    await _db.from('profiles').update({'foto': url}).eq('id', _uid);
+    return url;
+  }
+
+  @override
+  Future<void> removeProfilePhoto() async {
+    await _db.from('profiles').update({'foto': null}).eq('id', _uid);
   }
 
   // ---------------- Produk ----------------

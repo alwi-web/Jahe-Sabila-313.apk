@@ -330,6 +330,31 @@ class MainBadge extends StatelessWidget {
   }
 }
 
+/// Foto profil bulat; tanpa foto menampilkan huruf pertama nama.
+class UserAvatar extends StatelessWidget {
+  const UserAvatar({super.key, required this.profile, this.radius = 28});
+
+  final UserProfile profile;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    final ImageProvider? image = profile.photoBytes != null
+        ? MemoryImage(profile.photoBytes!)
+        : profile.photoUrl.isNotEmpty
+            ? NetworkImage(profile.photoUrl)
+            : null;
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: AppColors.kraft,
+      foregroundImage: image,
+      onForegroundImageError: image == null ? null : (_, __) {},
+      child: Text(profile.initial,
+          style: TextStyle(fontSize: radius * 0.75, fontWeight: FontWeight.w700, color: AppColors.ink)),
+    );
+  }
+}
+
 /// Logo Jahe Merah Sabila 313 (latar transparan, jadi ikut warna latar layar).
 class BrandLogo extends StatelessWidget {
   const BrandLogo({super.key, this.height = 72});

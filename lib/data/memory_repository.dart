@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'models.dart';
@@ -127,6 +129,23 @@ class MemoryRepository implements ShopRepository {
       ..phone = profile.phone
       ..email = profile.email;
     return false;
+  }
+
+  @override
+  Future<String> uploadProfilePhoto(Uint8List bytes, String ext) async {
+    await _wait();
+    _me
+      ..photoBytes = bytes
+      ..photoUrl = '';
+    return '';
+  }
+
+  @override
+  Future<void> removeProfilePhoto() async {
+    await _wait();
+    _me
+      ..photoBytes = null
+      ..photoUrl = '';
   }
 
   // ---------------- Produk ----------------
