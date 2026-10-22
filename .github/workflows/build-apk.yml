@@ -42,7 +42,7 @@ jobs:
       - name: Pasang ikon aplikasi
         run: cp -r .github/launcher/. android/app/src/main/res/
       - name: Pasang MainActivity (kanal notifikasi)
-        run: cp .github/android/MainActivity.kt "$(find android/app/src/main -name MainActivity.kt)"
+        run: cp .github/native/MainActivity.kt "$(find android/app/src/main -name MainActivity.kt)"
       - run: flutter pub get
       - name: Build APK
         run: flutter build apk --release
