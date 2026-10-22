@@ -50,8 +50,9 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    // Lihat produk -> tab Produk -> detail -> tambah ke keranjang -> halaman Masuk.
-    await tester.tap(find.text('Lihat produk'));
+    // Banner -> tab Produk -> detail -> tambah ke keranjang -> halaman Masuk.
+    // Banner sambutan membuka tab Produk.
+    await tester.tap(find.text('Jahe Merah Asli dari Petani Lokal'));
     await tester.pumpAndSettle();
     expect(state.tab, AppState.tabProducts);
     await tester.tap(find.text(state.products.first.name).last);
