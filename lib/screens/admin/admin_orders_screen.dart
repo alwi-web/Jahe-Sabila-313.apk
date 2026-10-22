@@ -39,7 +39,7 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 20,
-        title: const Text('Pesanan', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        title: const Text('Pesanan', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
       ),
       body: Column(children: [
         Padding(

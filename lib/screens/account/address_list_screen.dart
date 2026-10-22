@@ -41,7 +41,7 @@ class AddressListScreen extends StatelessWidget {
                         if (main) const MainBadge(),
                       ]),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Text(a.fullText, style: const TextStyle(fontSize: 14, height: 1.5)),
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                       TextButton(

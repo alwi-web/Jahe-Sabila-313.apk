@@ -28,7 +28,7 @@ class AdminProductsScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 20,
-        title: const Text('Produk', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        title: const Text('Produk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -95,7 +95,7 @@ class _ProductCard extends StatelessWidget {
             icon: const Icon(Icons.edit_outlined),
           ),
         ]),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         Table(
           columnWidths: const {0: FlexColumnWidth(1), 1: FlexColumnWidth(1.4), 2: FlexColumnWidth(1.2)},
           children: [

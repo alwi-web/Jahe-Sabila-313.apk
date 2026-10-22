@@ -63,16 +63,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               radius: 16,
             ),
           ),
-          const SizedBox(height: 20),
-          Text(p.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, height: 1.25)),
-          const SizedBox(height: 6),
+          const SizedBox(height: 24),
+          Text(p.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, height: 1.25)),
+          const SizedBox(height: 8),
           Text(rupiah(_variant.price),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.brand)),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(p.description, style: const TextStyle(fontSize: 14, color: AppColors.muted, height: 1.5)),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           const Text('Ukuran', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Row(children: [
             for (final v in p.variants) ...[
               Expanded(
@@ -82,10 +82,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   onTap: () => setState(() => _variant = v),
                 ),
               ),
-              if (v != p.variants.last) const SizedBox(width: 10),
+              if (v != p.variants.last) const SizedBox(width: 12),
             ],
           ]),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Row(children: [
             const Expanded(child: Text('Jumlah', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
             QtyStepper(

@@ -51,7 +51,7 @@ class CartScreen extends StatelessWidget {
                 ),
                 Text(rupiah(state.cartTotal), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
               ]),
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CheckoutScreen())),
                 child: const Text('Checkout'),
@@ -130,7 +130,7 @@ class _EmptyCart extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text('Keranjang masih kosong', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           const Text('Pilih varian jahe merah dulu, lalu masukkan ke keranjang.',
               textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: AppColors.muted, height: 1.5)),
           const SizedBox(height: 16),

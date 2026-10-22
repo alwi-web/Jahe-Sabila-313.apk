@@ -104,7 +104,7 @@ class ProductPhoto extends StatelessWidget {
     }
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
-      child: Container(width: width, height: height, color: AppColors.paper, child: child),
+      child: Container(width: width, height: height, color: AppColors.cream, child: child),
     );
   }
 }
@@ -119,6 +119,11 @@ class ProductThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProductPhoto(product: product, width: size, height: size * 1.2, packWidth: size * .62);
   }
+}
+
+/// Bayangan lembut untuk kartu di atas latar krem.
+class AppShadow {
+  static const card = [BoxShadow(color: Color(0x0F5A3A22), blurRadius: 12, offset: Offset(0, 3))];
 }
 
 class AppCard extends StatelessWidget {
@@ -136,6 +141,7 @@ class AppCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: borderColor ?? AppColors.line),
+        boxShadow: AppShadow.card,
       ),
       child: child,
     );
@@ -201,7 +207,7 @@ class LabeledField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 6),
+      const SizedBox(height: 8),
       TextFormField(
         controller: controller,
         keyboardType: keyboardType,
@@ -241,7 +247,7 @@ class _PasswordFieldState extends State<PasswordField> {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(widget.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 6),
+      const SizedBox(height: 8),
       TextFormField(
         controller: widget.controller,
         obscureText: _hidden,

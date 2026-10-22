@@ -21,7 +21,7 @@ class ResetSuccessScreen extends StatelessWidget {
                 decoration: const BoxDecoration(color: AppColors.successBg, shape: BoxShape.circle),
                 child: const Icon(Icons.check_rounded, size: 44, color: AppColors.success),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               const Text('Password berhasil diubah',
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),

@@ -194,9 +194,9 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             const Text('Foto produk', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             _photoPreview(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Row(children: [
               Expanded(
                 child: OutlinedButton.icon(
@@ -221,40 +221,40 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(onPressed: _busy ? null : _removePhoto, child: const Text('Hapus foto')),
               ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(
               label: 'Nama produk',
               controller: _name,
               hint: 'Contoh: Jahe Merah dengan Madu',
               validator: (v) => requiredField(v, 'Nama produk'),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(label: 'Deskripsi', controller: _desc, hint: 'Deskripsi singkat produk', maxLines: 3),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             const Text('Informasi produk', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
             const Text('Opsional. Yang diisi tampil di halaman detail produk pembeli.',
                 style: TextStyle(fontSize: 13, color: AppColors.muted)),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             LabeledField(
                 label: 'Komposisi', controller: _composition, hint: 'Contoh: jahe merah, gula aren', maxLines: 3),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(
                 label: 'Saran penyajian',
                 controller: _serving,
                 hint: 'Contoh: seduh 1 sendok makan dengan 200 ml air panas',
                 maxLines: 3),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LabeledField(
                 label: 'Saran penyimpanan',
                 controller: _storage,
                 hint: 'Contoh: simpan di tempat kering dan tertutup rapat',
                 maxLines: 3),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             const Text('Harga dan stok per ukuran', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
             const Text('Kosongkan stok kalau tidak ingin dihitung.', style: TextStyle(fontSize: 13, color: AppColors.muted)),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             for (final s in PackSize.values) ...[
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 SizedBox(
@@ -268,7 +268,7 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
                 const SizedBox(width: 8),
                 Expanded(child: _numberField('Stok', _stock[s]!, _stockValidator)),
               ]),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
             ],
             if (_editing) ...[
               const SizedBox(height: 12),

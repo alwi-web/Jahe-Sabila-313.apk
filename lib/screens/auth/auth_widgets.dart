@@ -18,10 +18,10 @@ class AuthHeader extends StatelessWidget {
         const SizedBox(height: 16),
         const Text('Jahe Merah Sabila 313',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.brown)),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
       ],
-      Text(title, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, height: 1.25)),
-      const SizedBox(height: 6),
+      Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.25)),
+      const SizedBox(height: 8),
       Text(subtitle, style: const TextStyle(fontSize: 14, color: AppColors.muted, height: 1.5)),
     ]);
   }

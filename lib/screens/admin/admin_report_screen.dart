@@ -86,7 +86,7 @@ class _AdminReportScreenState extends State<AdminReportScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 20,
-        title: const Text('Laporan', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        title: const Text('Laporan', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
       ),
       body: RefreshIndicator(
         onRefresh: () => runGuarded(context, state.loadAdminOrders),
@@ -122,7 +122,7 @@ class _AdminReportScreenState extends State<AdminReportScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('Pendapatan (${r.periodLabel})', style: const TextStyle(fontSize: 13, color: AppColors.muted)),
                 const SizedBox(height: 4),
-                Text(rupiah(r.revenue), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+                Text(rupiah(r.revenue), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                 const Text('Dari pesanan berstatus Selesai', style: TextStyle(fontSize: 13, color: AppColors.muted)),
               ]),
             ),
@@ -199,7 +199,7 @@ class _MiniStat extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(label, style: const TextStyle(fontSize: 13, color: AppColors.muted)),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
       ]),
     );
   }

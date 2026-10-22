@@ -163,7 +163,7 @@ class _OrderCard extends StatelessWidget {
             decoration: BoxDecoration(color: AppColors.cream, borderRadius: BorderRadius.circular(12)),
             child: Row(children: [
               const Icon(Icons.local_shipping_outlined, size: 20, color: AppColors.muted),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Expanded(
                 child: SelectableText('${order.courier} · Resi ${order.trackingNumber}',
                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),

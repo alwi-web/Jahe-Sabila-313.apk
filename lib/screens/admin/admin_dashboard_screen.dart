@@ -49,7 +49,7 @@ class AdminDashboardScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 20,
-        title: const Text('Beranda', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        title: const Text('Beranda', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
         actions: [
           IconButton(
             tooltip: 'Pengaturan toko',
@@ -83,20 +83,24 @@ class AdminDashboardScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
-              childAspectRatio: 1.6,
+              childAspectRatio: 1.35,
               children: [
                 _StatCard(
+                  icon: Icons.hourglass_top_rounded,
                   label: 'Menunggu bayar',
                   value: '${state.countByStatus(OrderStatus.waitingPayment)}',
                   onTap: () => state.openAdminOrders(OrderStatus.waitingPayment),
                 ),
                 _StatCard(
+                  icon: Icons.local_shipping_outlined,
                   label: 'Perlu dikirim',
                   value: '${state.countByStatus(OrderStatus.processing)}',
                   onTap: () => state.openAdminOrders(OrderStatus.processing),
                 ),
-                _StatCard(label: 'Penjualan bulan ini', value: rupiah(monthSales), small: true),
                 _StatCard(
+                    icon: Icons.payments_outlined, label: 'Penjualan bulan ini', value: rupiah(monthSales), small: true),
+                _StatCard(
+                  icon: Icons.inventory_2_outlined,
                   label: 'Stok menipis',
                   value: '$lowStock varian',
                   alert: lowStock > 0,
@@ -104,7 +108,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             Row(children: [
               const Expanded(
                 child: Text('Pesanan terbaru', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -137,8 +141,16 @@ class AdminDashboardScreen extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  const _StatCard({required this.label, required this.value, this.onTap, this.small = false, this.alert = false});
+  const _StatCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.onTap,
+    this.small = false,
+    this.alert = false,
+  });
 
+  final IconData icon;
   final String label;
   final String value;
   final VoidCallback? onTap;
@@ -147,31 +159,44 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: alert ? const Color(0xFFE3B8AE) : AppColors.line),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(label, style: const TextStyle(fontSize: 13, color: AppColors.muted)),
-            const SizedBox(height: 4),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(value,
-                  style: TextStyle(
-                    fontSize: small ? 18 : 22,
-                    fontWeight: FontWeight.w700,
-                    color: alert ? AppColors.brand : AppColors.ink,
-                  )),
-            ),
-          ]),
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), boxShadow: AppShadow.card),
+      child: Material(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: alert ? const Color(0xFFE3B8AE) : AppColors.line),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: alert ? const Color(0xFFF7E3DE) : AppColors.cream,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, size: 19, color: alert ? AppColors.brand : AppColors.brown),
+              ),
+              const Spacer(),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(value,
+                    style: TextStyle(
+                      fontSize: small ? 18 : 22,
+                      fontWeight: FontWeight.w800,
+                      color: alert ? AppColors.brand : AppColors.ink,
+                    )),
+              ),
+              const SizedBox(height: 2),
+              Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption),
+            ]),
+          ),
         ),
       ),
     );

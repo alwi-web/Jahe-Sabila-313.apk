@@ -109,7 +109,7 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
             padding: const EdgeInsets.all(14),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               const Text('Pembeli', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Text('${o.buyerName.isEmpty ? 'Pembeli' : o.buyerName}${o.buyerPhone.isEmpty ? '' : ' · ${o.buyerPhone}'}',
                   style: const TextStyle(fontSize: 14, height: 1.5)),
               const SizedBox(height: 4),
@@ -131,7 +131,7 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text('Isi pesanan', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               for (final l in o.lines) ...[
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Expanded(
@@ -142,10 +142,10 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
                   ),
                   Text(rupiah(l.total), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 ]),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
               ],
               const Divider(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               Row(children: [
                 Expanded(
                   child: Text('Total (${o.itemCount} barang)',
@@ -160,7 +160,7 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
             padding: const EdgeInsets.all(14),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               const Text('Pengiriman', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               Row(children: [
                 for (final c in _couriers) ...[
                   Expanded(
@@ -182,14 +182,14 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
                 onPressed: _busy ? null : _saveShipping,
                 child: const Text('Simpan resi'),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               const Text('Setelah disimpan, resi tampil di riwayat pesanan pembeli dan ikut di pesan WhatsApp.',
                   style: TextStyle(fontSize: 13, color: AppColors.muted, height: 1.4)),
             ]),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           const Text('Ubah status', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
@@ -206,7 +206,7 @@ class _AdminOrderDetailScreenState extends State<AdminOrderDetailScreen> {
           const Text('Cek transfer secara manual, lalu ubah status ke Diproses. Perubahan langsung terlihat di aplikasi pembeli.',
               style: TextStyle(fontSize: 13, color: AppColors.muted, height: 1.4)),
           if (canCancel) ...[
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.brand,

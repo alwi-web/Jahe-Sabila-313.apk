@@ -30,7 +30,7 @@ class OrderSuccessScreen extends StatelessWidget {
                 decoration: const BoxDecoration(color: AppColors.successBg, shape: BoxShape.circle),
                 child: const Icon(Icons.check_rounded, size: 44, color: AppColors.success),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               Text('Pesanan #${order.number} tersimpan',
                   textAlign: TextAlign.center, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
@@ -68,7 +68,7 @@ class OrderSuccessScreen extends StatelessWidget {
           },
           child: const Text('Lihat riwayat pesanan'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         OutlinedButton(
           onPressed: () {
             state.setTab(AppState.tabHome);
