@@ -6,7 +6,7 @@ import '../../data/models.dart';
 import '../../theme.dart';
 import '../../utils/format.dart';
 import '../../widgets/common.dart';
-import '../auth/login_screen.dart';
+import '../home/router.dart';
 import 'admin_order_detail_screen.dart';
 import 'admin_shell.dart';
 import 'store_settings_screen.dart';
@@ -26,7 +26,9 @@ class AdminDashboardScreen extends StatelessWidget {
   Future<void> _logout(BuildContext context) async {
     final ok = await runGuarded(context, context.read<AppState>().signOut);
     if (!ok || !context.mounted) return;
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const LoginScreen()), (_) => false);
+    // Setelah keluar kembali ke Beranda sebagai tamu.
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => homeFor(context.read<AppState>())), (_) => false);
   }
 
   @override

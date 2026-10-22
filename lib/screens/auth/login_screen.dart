@@ -9,7 +9,11 @@ import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.returnAfterLogin = false});
+
+  /// true = dibuka dari aksi yang butuh login (mis. tambah ke keranjang):
+  /// setelah pembeli login, kembali ke halaman sebelumnya dengan hasil true.
+  final bool returnAfterLogin;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -38,15 +42,22 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
     setState(() => _busy = false);
     if (!ok) return;
+    final state = context.read<AppState>();
+    if (widget.returnAfterLogin && !state.isAdmin) {
+      Navigator.of(context).pop(true);
+      return;
+    }
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => homeFor(context.read<AppState>())),
+      MaterialPageRoute(builder: (_) => homeFor(state)),
       (_) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final canGoBack = Navigator.of(context).canPop();
     return Scaffold(
+      appBar: canGoBack ? AppBar() : null,
       body: SafeArea(
         child: Form(
           key: _form,
@@ -81,6 +92,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 4),
               BusyButton(label: 'Masuk', busy: _busy, onPressed: _submit),
+              if (!canGoBack) ...[
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => homeFor(context.read<AppState>())),
+                    (_) => false,
+                  ),
+                  child: const Text('Lihat produk tanpa masuk'),
+                ),
+              ],
             ],
           ),
         ),

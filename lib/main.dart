@@ -7,7 +7,6 @@ import 'data/app_state.dart';
 import 'data/memory_repository.dart';
 import 'data/repository.dart';
 import 'data/supabase_repository.dart';
-import 'screens/auth/login_screen.dart';
 import 'screens/home/router.dart';
 import 'theme.dart';
 
@@ -103,7 +102,7 @@ class Sabila313App extends StatelessWidget {
   }
 }
 
-/// Memulihkan sesi login yang tersimpan, lalu membuka Beranda atau Login.
+/// Memulihkan sesi login yang tersimpan, lalu membuka Beranda (pembeli/tamu) atau dashboard admin.
 class _StartGate extends StatefulWidget {
   const _StartGate();
 
@@ -122,7 +121,8 @@ class _StartGateState extends State<_StartGate> {
         if (snap.connectionState != ConnectionState.done) {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
-        return snap.data == true ? homeFor(context.read<AppState>()) : const LoginScreen();
+        // Tamu juga langsung masuk ke Beranda; login diminta saat berbelanja.
+        return homeFor(context.read<AppState>());
       },
     );
   }

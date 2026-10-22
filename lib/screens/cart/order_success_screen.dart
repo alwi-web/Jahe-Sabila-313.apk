@@ -63,7 +63,7 @@ class OrderSuccessScreen extends StatelessWidget {
       bottomNavigationBar: BottomActions(divider: false, children: [
         FilledButton(
           onPressed: () {
-            state.setTab(2);
+            state.setTab(AppState.tabAccount);
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const OrderHistoryScreen()));
           },
           child: const Text('Lihat riwayat pesanan'),
@@ -71,7 +71,7 @@ class OrderSuccessScreen extends StatelessWidget {
         const SizedBox(height: 10),
         OutlinedButton(
           onPressed: () {
-            state.setTab(0);
+            state.setTab(AppState.tabHome);
             Navigator.of(context).popUntil((r) => r.isFirst);
           },
           child: const Text('Kembali ke beranda'),

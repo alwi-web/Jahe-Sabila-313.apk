@@ -6,6 +6,7 @@ import '../../data/models.dart';
 import '../../theme.dart';
 import '../../utils/format.dart';
 import '../../widgets/common.dart';
+import '../auth/require_login.dart';
 import '../cart/cart_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -21,7 +22,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late Variant _variant = widget.product.variants.first;
   int _qty = 1;
 
-  void _addToCart() {
+  Future<void> _addToCart() async {
+    // Tamu harus masuk dulu; setelah login kembali ke sini dan barang langsung dimasukkan.
+    if (!await requireLogin(context)) return;
+    if (!mounted) return;
     context.read<AppState>().addToCart(widget.product, _variant, _qty);
     final added = '${_variant.size.label} x $_qty';
     setState(() => _qty = 1);

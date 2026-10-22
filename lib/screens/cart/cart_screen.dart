@@ -16,7 +16,7 @@ class CartScreen extends StatelessWidget {
   final bool pushed;
 
   void _goShopping(BuildContext context) {
-    context.read<AppState>().setTab(0);
+    context.read<AppState>().setTab(AppState.tabProducts);
     if (pushed) Navigator.of(context).popUntil((r) => r.isFirst);
   }
 
