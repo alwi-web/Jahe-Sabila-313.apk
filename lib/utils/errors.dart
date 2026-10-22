@@ -37,6 +37,18 @@ String friendlyError(Object error) {
     return 'Gagal memproses data. Coba lagi.';
   }
 
+  if (error is StorageException) {
+    final m = error.message.toLowerCase();
+    if (m.contains('bucket not found')) {
+      return 'Penyimpanan foto belum disiapkan. Jalankan SQL foto di Supabase.';
+    }
+    if (m.contains('row-level security') || m.contains('unauthorized') || error.statusCode == '403') {
+      return 'Tidak diizinkan mengunggah foto (aturan Storage Supabase).';
+    }
+    if (m.contains('payload too large') || m.contains('exceeded the maximum')) return 'Ukuran foto terlalu besar';
+    return 'Gagal mengunggah foto: ${error.message}';
+  }
+
   final text = error.toString().toLowerCase();
   if (text.contains('socketexception') || text.contains('failed host lookup') || text.contains('network')) {
     return 'Tidak ada koneksi internet';
