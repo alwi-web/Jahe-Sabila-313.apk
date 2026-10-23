@@ -235,31 +235,11 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
             const Text('Foto produk', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             _photoPreview(),
-            const SizedBox(height: 12),
-            Row(children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(44)),
-                  onPressed: _busy ? null : () => _pick(ImageSource.gallery),
-                  icon: const Icon(Icons.photo_library_outlined, size: 18),
-                  label: Text(_hasPhoto ? 'Ganti foto' : 'Pilih dari galeri', style: const TextStyle(fontSize: 14)),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(44)),
-                  onPressed: _busy ? null : () => _pick(ImageSource.camera),
-                  icon: const Icon(Icons.photo_camera_outlined, size: 18),
-                  label: const Text('Ambil foto', style: TextStyle(fontSize: 14)),
-                ),
-              ),
-            ]),
             if (_hasPhoto)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(onPressed: _busy ? null : _removePhoto, child: const Text('Hapus foto')),
-              ),
+              Row(children: [
+                const Expanded(child: Text('Ketuk foto untuk mengganti', style: AppText.caption)),
+                TextButton(onPressed: _busy ? null : _removePhoto, child: const Text('Hapus foto')),
+              ]),
             const SizedBox(height: 16),
             LabeledField(
               label: 'Nama produk',
