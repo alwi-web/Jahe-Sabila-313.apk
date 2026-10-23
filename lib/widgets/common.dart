@@ -298,7 +298,7 @@ class _PasswordFieldState extends State<PasswordField> {
           hintText: widget.hint,
           suffixIcon: IconButton(
             tooltip: _hidden ? 'Tampilkan password' : 'Sembunyikan password',
-            icon: Icon(_hidden ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: AppColors.muted),
+            icon: Icon(_hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: AppColors.muted),
             onPressed: () => setState(() => _hidden = !_hidden),
           ),
         ),
