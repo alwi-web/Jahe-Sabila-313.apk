@@ -10,8 +10,33 @@ import '../catalog/catalog_screen.dart';
 import 'landing_screen.dart';
 
 /// Kerangka utama pembeli dan tamu: Beranda, Produk, Keranjang, Akun.
-class HomeShell extends StatelessWidget {
+class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
+
+  @override
+  State<HomeShell> createState() => _HomeShellState();
+}
+
+class _HomeShellState extends State<HomeShell> {
+  static const _tabs = [LandingScreen(), CatalogScreen(), CartScreen(), ProfileScreen()];
+
+  /// Satu controller per tab, dipakai daftar utama tab itu lewat PrimaryScrollController.
+  final _scrollers = List.generate(_tabs.length, (_) => ScrollController());
+
+  @override
+  void dispose() {
+    for (final c in _scrollers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  /// Mengetuk tab yang sedang terbuka menggulir halamannya kembali ke atas.
+  void _scrollToTop(int tab) {
+    for (final p in _scrollers[tab].positions) {
+      p.animateTo(0, duration: const Duration(milliseconds: 450), curve: Curves.easeOutCubic);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +46,19 @@ class HomeShell extends StatelessWidget {
     return Scaffold(
       body: IndexedStack(
         index: state.tab,
-        children: const [LandingScreen(), CatalogScreen(), CartScreen(), ProfileScreen()],
+        children: [
+          for (var i = 0; i < _tabs.length; i++) PrimaryScrollController(controller: _scrollers[i], child: _tabs[i]),
+        ],
       ),
       bottomNavigationBar: DecoratedBox(
         decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.line))),
         child: NavigationBar(
         selectedIndex: state.tab,
         onDestinationSelected: (i) async {
+          if (i == state.tab) {
+            _scrollToTop(i);
+            return;
+          }
           // Keranjang dan Akun butuh login; tamu diarahkan ke halaman Masuk dulu.
           final needsAccount = i == AppState.tabCart || i == AppState.tabAccount;
           if (needsAccount && !await requireLogin(context)) return;
