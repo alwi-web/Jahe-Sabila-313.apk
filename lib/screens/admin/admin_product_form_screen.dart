@@ -70,6 +70,30 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
         d.removeImage = true;
       });
 
+  Future<void> _choosePhotoSource() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const SizedBox(height: 8),
+          ListTile(
+            leading: const Icon(Icons.photo_library_outlined),
+            title: const Text('Pilih dari galeri'),
+            onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_camera_outlined),
+            title: const Text('Ambil foto'),
+            onTap: () => Navigator.pop(ctx, ImageSource.camera),
+          ),
+          const SizedBox(height: 8),
+        ]),
+      ),
+    );
+    if (source != null) await _pick(source);
+  }
+
+  /// Kotak unggah foto: bergaris putus-putus saat kosong, ketuk untuk memilih foto.
   Widget _photoPreview() {
     Widget? img;
     if (d.newImageBytes != null) {
@@ -79,19 +103,34 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
     } else if (!d.removeImage && d.imageUrl != null && d.imageUrl!.isNotEmpty) {
       img = Image.network(d.imageUrl!, fit: BoxFit.cover);
     }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 200,
-        width: double.infinity,
-        color: AppColors.paper,
-        child: img ??
-            const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(Icons.add_photo_alternate_outlined, size: 40, color: AppColors.brown),
-              SizedBox(height: 8),
-              Text('Belum ada foto', style: TextStyle(color: AppColors.muted)),
-              Text('Tanpa foto, katalog memakai gambar kemasan', style: TextStyle(fontSize: 12, color: AppColors.muted)),
-            ]),
+    const radius = 16.0;
+    return Material(
+      color: img == null ? Colors.white : AppColors.paper,
+      borderRadius: BorderRadius.circular(radius),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: _busy ? null : _choosePhotoSource,
+        child: CustomPaint(
+          foregroundPainter: img == null ? const _DashedBorderPainter(radius: radius) : null,
+          child: SizedBox(
+            height: 200,
+            width: double.infinity,
+            child: img ??
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: const BoxDecoration(color: AppColors.cream, shape: BoxShape.circle),
+                    child: const Icon(Icons.cloud_upload_outlined, size: 28, color: AppColors.brand),
+                  ),
+                  const SizedBox(height: Gap.md),
+                  const Text('Ketuk untuk upload foto', style: AppText.bodyStrong),
+                  const SizedBox(height: Gap.xs),
+                  const Text('JPG atau PNG, maks. 5 MB', style: AppText.caption),
+                  const Text('Tanpa foto, katalog memakai gambar kemasan', style: AppText.caption),
+                ]),
+          ),
+        ),
       ),
     );
   }
@@ -295,4 +334,29 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
       ]),
     );
   }
+}
+
+/// Garis tepi putus-putus untuk kotak unggah foto.
+class _DashedBorderPainter extends CustomPainter {
+  const _DashedBorderPainter({required this.radius});
+
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.brown.withValues(alpha: 0.55)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6;
+    final rect = RRect.fromRectAndRadius((Offset.zero & size).deflate(0.8), Radius.circular(radius));
+    const dash = 8.0, gap = 6.0;
+    for (final metric in (Path()..addRRect(rect)).computeMetrics()) {
+      for (var d = 0.0; d < metric.length; d += dash + gap) {
+        canvas.drawPath(metric.extractPath(d, d + dash), paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedBorderPainter old) => old.radius != radius;
 }
