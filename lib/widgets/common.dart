@@ -243,16 +243,57 @@ class PasswordField extends StatefulWidget {
 class _PasswordFieldState extends State<PasswordField> {
   bool _hidden = true;
 
+  // Kolom password memakai controller sendiri yang menggambar titik-titik, bukan obscureText:
+  // obscureText di Android menampilkan huruf terakhir sesaat (pengaturan "Tampilkan sandi" di HP),
+  // sedangkan password harus langsung tersembunyi sejak diketik.
+  late final _MaskedController _masked = _MaskedController(widget.controller.value);
+
+  @override
+  void initState() {
+    super.initState();
+    _masked.addListener(_toParent);
+    widget.controller.addListener(_fromParent);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_fromParent);
+    _masked.dispose();
+    super.dispose();
+  }
+
+  void _toParent() {
+    if (widget.controller.value != _masked.value) widget.controller.value = _masked.value;
+  }
+
+  void _fromParent() {
+    if (_masked.value != widget.controller.value) _masked.value = widget.controller.value;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _masked.masked = _hidden;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(widget.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
       const SizedBox(height: 8),
       TextFormField(
-        controller: widget.controller,
-        obscureText: _hidden,
+        controller: _masked,
         validator: widget.validator,
         textInputAction: widget.textInputAction,
+        keyboardType: TextInputType.visiblePassword,
+        autocorrect: false,
+        enableSuggestions: false,
+        enableIMEPersonalizedLearning: false,
+        autofillHints: const [AutofillHints.password],
+        // Saat tersembunyi, password tidak bisa disalin atau dipotong; tempel tetap bisa.
+        contextMenuBuilder: (context, editable) => AdaptiveTextSelectionToolbar.buttonItems(
+          anchors: editable.contextMenuAnchors,
+          buttonItems: _hidden
+              ? editable.contextMenuButtonItems
+                  .where((b) => b.type == ContextMenuButtonType.paste || b.type == ContextMenuButtonType.selectAll)
+                  .toList()
+              : editable.contextMenuButtonItems,
+        ),
         decoration: InputDecoration(
           hintText: widget.hint,
           suffixIcon: IconButton(
@@ -263,6 +304,19 @@ class _PasswordFieldState extends State<PasswordField> {
         ),
       ),
     ]);
+  }
+}
+
+/// Controller yang menampilkan setiap huruf sebagai titik selama [masked] aktif.
+class _MaskedController extends TextEditingController {
+  _MaskedController(TextEditingValue super.value) : super.fromValue();
+
+  bool masked = true;
+
+  @override
+  TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {
+    if (!masked) return super.buildTextSpan(context: context, style: style, withComposing: withComposing);
+    return TextSpan(style: style, text: '\u2022' * text.length);
   }
 }
 
